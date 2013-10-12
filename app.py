@@ -1,6 +1,7 @@
 DEBUG = True
 from flask import Flask
-from flask import render_template, request, url_for, redirect
+from flask import render_template, request, url_for, redirect, \
+        flash
 from flask.ext.assets import Environment, Bundle
 from pymongo import MongoClient
 from datetime import datetime, timedelta
@@ -35,8 +36,6 @@ def driver():
 def search():
     if request.method == 'POST':
         matches, arriving, departing = list_results(request.form)
-        print "MAD"
-        print matches
         return render_template(
                 'show_results.html',
                 destination=request.form['destination'],
@@ -48,8 +47,6 @@ def search():
         return redirect(url_for('home'))
 
 def list_results(form):
-    print "Form is"
-    print form
     departure = form['depart']
     destination = form['destination']
     matches = rides.find( {
