@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %} | Ride{% endblock %}
+{% block content %}
+
+<div id=ride>
+  <div id=driver>
+    {{ ride.driver }}
+  </div>
+  <div id=location>
+    {{ ride.departure }} -> {{ ride.destination }}
+  </div>
+  <div id=info>
+    Departs at {{ ride['depart-time'] }}<br/>
+    There are {{ ride.people }} spots in the vehicle
+  </div>
+</div>
+
+{% endblock %}
