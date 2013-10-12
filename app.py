@@ -5,8 +5,10 @@ from flask import render_template, request, url_for, redirect, \
 from flask.ext.assets import Environment, Bundle
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 assets = Environment(app)
 assets.init_app(app)
 
@@ -35,7 +37,11 @@ def driver():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
-        matches, arriving, departing = list_results(request.form)
+        if not request.form['depart'] and \
+                not request.form['destination']:
+            flash("No search parameters provided")
+            return redirect(url_for('home'))
+        matches, arriving, departing = list_results(dep, dest)
         return render_template(
                 'show_results.html',
                 destination=request.form['destination'],
@@ -44,11 +50,10 @@ def search():
                 arriving=arriving,
                 departing=departing)
     else:
+        # why are you GETting this page?
         return redirect(url_for('home'))
 
-def list_results(form):
-    departure = form['depart']
-    destination = form['destination']
+def list_results(departure, destination):
     matches = rides.find( {
         'departure': '%s' % departure,
         'destination': '%s' % destination
