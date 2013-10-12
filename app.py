@@ -77,14 +77,10 @@ def list_results(departure, destination):
         [departure for departure in departing],
         [arrival for arrival in arriving]
     )
-    print results[0]
     return results
 
 @app.route('/submit_ride', methods=['POST'])
 def add_ride():
-    def totimestamp(dt, epoch=datetime(1970,1,1)):
-        td = dt - epoch
-        return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 1e6
     form = request.form
     name = form['name']
     departure = form['departure']
@@ -95,12 +91,13 @@ def add_ride():
     datestr = date + " " + time
     fmt = "%Y-%m-%d %H:%M"
     depart_time = datetime.strptime(datestr, fmt)
-    ride = {'driver': name,
-            'departure': departure,
-            'destination': destination,
-            'people': people,
-            'depart-time': totimestamp(depart_time)
-            }
+    ride = {
+        'driver': name,
+        'departure': departure,
+        'destination': destination,
+        'people': people,
+        'depart-time': totimestamp(depart_time)
+    }
     try:
         rides.insert(ride)
         return redirect(url_for('driver'))
