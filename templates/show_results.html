@@ -24,9 +24,10 @@
 <ul>
 {% for ride in rides %}
 <li>
-  <span class=name>{{ ride['driver'] }}</span> is leaving
-  <span class=departure>{{ ride['departure'] }}</span> to go to
-  <span class=destination>{{ ride['destination'] }}</span>
+  <span class=name>{{ ride.driver }}</span> is leaving
+  <span class=departure>{{ ride.departure }}</span> to go to
+  <span class=destination>{{ ride.destination }}</span>
+  <a href='/rides/{{ ride._id }}'>Book it</a>
 </li>
 {% endfor %}
 </ul>
