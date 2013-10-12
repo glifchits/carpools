@@ -9,11 +9,14 @@ from datetime import datetime, timedelta
 import os
 import re
 
+
+''' Flask app setup '''
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 assets = Environment(app)
 assets.init_app(app)
 
+''' MongoDB setup '''
 client = MongoClient()
 db = client.carpools
 rides = db.rides
@@ -21,26 +24,36 @@ rides = db.rides
 if DEBUG:
     app.debug = True
     assets.debug = True
-    app.config['ASSETS_DEBUG'] = True
 
+''' Asset bundles '''
 css = Bundle('style.css', 'show_rides.css')
 assets.register('css', css)
 
+''' Other extensions '''
+# jinja template loop controls. allows {% continue %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+
+''' Random stuff '''
+logger = app.logger
+
+
+
+''' App controllers '''
 
 @app.route('/')
 def home():
     return render_template('home.html')
 
+
 @app.route('/driver')
 def driver():
     return render_template('driver.html')
 
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
-        try:
-            # no parameters
+        try: # no parameters
             if not request.form['departure'] and not request.form['destination']:
                 flash("No search parameters provided")
                 return redirect(url_for('home'))
@@ -62,6 +75,7 @@ def search():
         )
     return redirect(url_for('home'))
 
+
 def search_rides(departure, destination):
     ''' This function does the DB search '''
     dep = re.compile("%s" % departure, re.IGNORECASE)
@@ -71,6 +85,7 @@ def search_rides(departure, destination):
         'destination' : des
     })
     if matches.count() == 0:
+        log("No matches found")
         arriving = rides.find({
             'destination' : des
         })
@@ -86,10 +101,10 @@ def search_rides(departure, destination):
     )
     return results
 
+
 @app.route('/submit_ride', methods=['POST'])
 def add_ride():
     form = request.form
-    print form
     try:
         name        = form['name']
         departure   = form['departure']
@@ -114,8 +129,10 @@ def add_ride():
     try:
         rides.insert(ride)
         return redirect(url_for('driver'))
-    except Error as e:
-        return e.msg
+    except Exception as e:
+        flash("Could not add your ride: %s (%s)" % (str(e), e.message))
+        return redirect(url_for('home'))
+
 
 @app.route('/rides/<ride_id>')
 def get_ride(ride_id):
