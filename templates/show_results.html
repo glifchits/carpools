@@ -2,7 +2,17 @@
 
 {% block title %} | Search results{% endblock %}
 {% block content %}
-<h2>Leaving {{ departure }} to go to {{ destination }}</h2>
+
+<h2>
+{% if departure and destination %}
+  Leaving {{ departure }} to go to {{ destination }}
+{% elif departure %}
+  Rides leaving {{ departure }}
+{% else %}
+  Rides going to {{ destination }}
+{% endif %}
+</h2>
+
 {% for (name, rides) in [
   ("Matches", matches), 
   ("Arriving", arriving), 
