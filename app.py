@@ -1,4 +1,5 @@
 DEBUG = True
+
 from flask import Flask
 from flask import render_template, request, url_for, redirect, \
         flash
@@ -78,14 +79,14 @@ def search():
 
 def search_rides(departure, destination):
     ''' This function does the DB search '''
-    dep = re.compile("%s" % departure, re.IGNORECASE)
-    des = re.compile("%s" % destination, re.IGNORECASE)
+    dep = re.compile("^%s$" % departure, re.IGNORECASE)
+    des = re.compile("^%s$" % destination, re.IGNORECASE)
     matches = rides.find({
         'departure'   : dep,
         'destination' : des
     })
     if matches.count() == 0:
-        log("No matches found")
+        logger.info("No matches found")
         arriving = rides.find({
             'destination' : des
         })
@@ -99,12 +100,14 @@ def search_rides(departure, destination):
         [arrival for arrival in arriving],
         [departure for departure in departing]
     )
+    logger.debug(results)
     return results
 
 
 @app.route('/submit_ride', methods=['POST'])
 def add_ride():
     form = request.form
+    logger.debug(form)
     try:
         name        = form['name']
         departure   = form['departure']
