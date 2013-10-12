@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<form id='ride-search' action='/search' method='POST'>
+  <input name='depart' type='text' placeholder='Where are you leaving from?'>
+  <input name='destination' type='text' placeholder='Where are you headed?'>
+  <button type='submit'>Let's go!</button>
+</form>
+
+<a href="{{ url_for('driver') }}">Share your ride</a>
+{% endblock %}

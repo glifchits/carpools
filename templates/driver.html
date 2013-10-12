@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %} | Share a ride{% endblock %}
+
+{% block content %}
+<form id='ride-submit' action='/submit_ride' method='POST'>
+  <input name='name' type='text' placeholder="What's your name?">
+  <input name='depart' type='text' placeholder='Where are you leaving from?'>
+  <input name='destination' type='text' placeholder='Where are you headed?'>
+  <p>That'll be about <span class='cost'>$15.00</span></p>
+  <label for='depart-date'>When are you leaving?</label>
+  <input name='depart-date' type='date'>
+  <label for='depart-time'>What time?</label>
+  <input name='depart-time' type='time'>
+  <label for='people'>How many people</label>
+  <input name='people' type='number'>
+  <button type='submit'>Let's go!</button>
+</form>
+{% endblock %}

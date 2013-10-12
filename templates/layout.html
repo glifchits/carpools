@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Carpools{% block title %}{% endblock %}</title>
+    {% assets "css" %}
+      <link href='{{ ASSET_URL }}' rel='stylesheet' type='text/css'>
+    {% endassets %}
+  </head>
+  <body>
+    <div class='container'>
+      <header>
+      <a href='/'><h1>Carpools</h1></a>
+      </header>
+      <div class='content'>
+        {% block content %}
+          <p>Welcome to Carpools!</p>
+        {% endblock %}
+      </div>
+      <footer>
+        <p> &copy; George Lifchits 2013 </p>
+      </footer>
+    </div>
+  </body>
+</html>

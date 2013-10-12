@@ -1,0 +1,25 @@
+.container {
+  margin: 0 auto;
+  width: 600px;
+}
+
+.content {
+  padding: 1em;
+}
+
+header {
+  margin-bottom: 2em;
+  border-bottom: 1px dotted black;
+  text-align: center;
+}
+
+form input {
+  width: 100%;
+}
+
+footer {
+  margin-top: 2em;
+  border-top: 1px dotted grey;
+  color: lightgrey;
+  text-align: center;
+}
