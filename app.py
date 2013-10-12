@@ -41,6 +41,8 @@ def search():
                 not request.form['destination']:
             flash("No search parameters provided")
             return redirect(url_for('home'))
+        dep = request.form['depart']
+        dest = request.form['destination']
         matches, arriving, departing = list_results(dep, dest)
         return render_template(
                 'show_results.html',
