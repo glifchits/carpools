@@ -20,7 +20,7 @@
 {% if not rides %}
 {% continue %}
 {% endif %}
-<b>{{ name }}</b>
+<span class=ride-type>{{ name }}</span> <span class=ride-count>{{ rides|length }} rides found</span>
 <ul>
 {% for ride in rides %}
 <li>
