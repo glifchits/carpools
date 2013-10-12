@@ -72,7 +72,8 @@ def search():
             departure   = dep,
             matches     = matches,
             arriving    = arriving,
-            departing   = departing
+            departing   = departing,
+            absolutely_nothing = (not matches and not arriving and not departing)
         )
     return redirect(url_for('home'))
 

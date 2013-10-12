@@ -4,32 +4,54 @@
 {% block content %}
 
 <h2>
-{% if departure and destination %}
-  Leaving {{ departure }} to go to {{ destination }}
-{% elif departure %}
-  Rides leaving {{ departure }}
-{% else %}
-  Rides going to {{ destination }}
-{% endif %}
+  Rides 
+  {% if departure and destination %}
+  leaving {{ departure }} to go to {{ destination }}
+  {% elif departure %}
+  leaving {{ departure }}
+  {% else %}
+  going to {{ destination }}
+  {% endif %}
 </h2>
 
-{% for (name, rides) in [
-  ("Matches", matches), 
-  ("Arriving", arriving), 
-  ("Departing", departing) ] %}
+{% if absolutely_nothing %}
+<p class=search-error>
+{% if departure and destination %}
+Sorry, no one is leaving {{ departure }} or arriving at {{ destination }} now!
+{% elif departure %}
+Sorry, no one is leaving from {{ departure }} now!
+{% else %}
+Sorry, no one is arriving at {{ destination }} now!
+{% endif %}
+</p>
+{% else %} {# not absolutely nothing #}
+{% for (name, rides) in [("", matches), 
+("arriving", arriving), 
+("departing", departing) ] %}
 {% if not rides %}
+{% if not name and departure and destination %} {# no rides are exact matches in a two param search #}
+<p class=search-error>No exact matches, here's the best we could do.</p>
+{% endif %}
 {% continue %}
 {% endif %}
-<span class=ride-type>{{ name }}</span> <span class=ride-count>{{ rides|length }} rides found</span>
+<span class=rides-info>
+  {{ rides|length }} rides found
+  {% if name == "arriving" %}
+  arriving at {{ destination }}
+  {% elif name == "departing" %}
+  departing from {{ departure }}
+  {% endif %}
+</span>
 <ul>
-{% for ride in rides %}
-<li>
+  {% for ride in rides %}
+  <li>
   <span class=name>{{ ride.driver }}</span> is leaving
   <span class=departure>{{ ride.departure }}</span> to go to
   <span class=destination>{{ ride.destination }}</span>
-  <a href='/rides/{{ ride._id }}'>Book it</a>
-</li>
-{% endfor %}
+  <span class=book-it><a href='/rides/{{ ride._id }}'>Book it</a></span>
+  </li>
+  {% endfor %}
 </ul>
-{% endfor %}
+{% endfor %} {# rides in [matches, arr, depr] #}
+{% endif %} {# absolutely nothing if stmt #}
 {% endblock %}
