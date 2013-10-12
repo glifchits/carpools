@@ -13,6 +13,13 @@ header {
   text-align: center;
 }
 
+.errors {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1em;
+}
+
 form input {
   width: 100%;
 }
