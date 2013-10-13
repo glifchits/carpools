@@ -3,8 +3,9 @@
   <head>
     <title>Carpools{% block title %}{% endblock %}</title>
     {% assets "css" %}
-      <link href='{{ ASSET_URL }}' rel=stylesheet type=text/css>
+    <link href='{{ ASSET_URL }}' rel=stylesheet type=text/css>
     {% endassets %}
+    <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'> 
   </head>
   <body>
     <div class=container>
@@ -13,11 +14,11 @@
       </header>
       <div class=content>
         {% block content %}
-          <p>Welcome to Carpools!</p>
+        <p>Welcome to Carpools!</p>
         {% endblock %}
       </div>
       <footer>
-        <p> &copy; George Lifchits 2013 </p>
+      <p> &copy; George Lifchits 2013 </p>
       </footer>
     </div>
   </body>

@@ -3,20 +3,29 @@
 {% block content %}
 
 {% with messages = get_flashed_messages() %}
-  {% if messages %}
-  <ul class=errors>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+{% if messages %}
+<ul class=errors>
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% endwith %}
 
 <form id=ride-search action=/search method=POST>
-  <input name=departure type=text placeholder='Where are you leaving from?'>
-  <input name=destination type=text placeholder='Where are you headed?'>
-  <button type=submit>Let's go!</button>
+  <input name=departure type=text placeholder='Where are you leaving from?' tabindex=1>
+  <input name=destination type=text placeholder='Where are you headed?' tabindex=2>
+  <div class=center-button>
+    <button name=submit type=submit tabindex=3>Let's go!</button>
+  </div>
 </form>
 
-<a href="{{ url_for('driver') }}">Share your ride</a>
+
+<div class=share-your-ride>
+  <a href="{{ url_for('driver') }}">
+    <span tabindex=4>
+        Share your ride
+    </span>
+  </a>
+</div>
 {% endblock %}
