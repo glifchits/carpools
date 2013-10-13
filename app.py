@@ -34,16 +34,10 @@ app.config['DEBUG_TB_PANELS'] = ('flask.ext.mongoengine.panels.MongoDebugPanel',
 from mongoengine import *
 app.config['MONGODB_SETTINGS'] = {'DB': 'carpools'}
 db = MongoEngine(app)
-'''
-from pymongo import MongoClient
-from bson.objectid import ObjectId
-client = MongoClient()
-db = client.carpools
-rides = db.rides
-'''
 
 ''' Asset bundles '''
-css = Bundle('style.css', 'show_rides.css')
+css = Bundle('style.css', 'home.css', 'show_results.css', 'show_ride.css', \
+    'normalize.css')
 assets.register('css', css)
 
 ''' Other extensions '''
