@@ -1,11 +1,13 @@
 DEBUG = True
 
+''' Flask+extension imports '''
 from flask import Flask
-from flask import render_template, request, url_for, redirect, \
-        flash
+from flask import render_template, request, url_for, redirect, flash
+from flask.ext.mongoengine import MongoEngine
 from flask.ext.assets import Environment, Bundle
-from pymongo import MongoClient
-from bson.objectid import ObjectId
+from flask_debugtoolbar import DebugToolbarExtension
+
+''' builtin libraries '''
 from datetime import datetime, timedelta
 import os
 import re
@@ -17,14 +19,28 @@ app.secret_key = os.urandom(24)
 assets = Environment(app)
 assets.init_app(app)
 
-''' MongoDB setup '''
-client = MongoClient()
-db = client.carpools
-rides = db.rides
-
 if DEBUG:
     app.debug = True
     assets.debug = True
+
+
+''' Flask debug toolbar '''
+'''
+toolbar = DebugToolbarExtension(app)
+app.config['DEBUG_TB_PANELS'] = ('flask.ext.mongoengine.panels.MongoDebugPanel',)
+'''
+
+''' MongoDB setup '''
+from mongoengine import *
+app.config['MONGODB_SETTINGS'] = {'DB': 'carpools'}
+db = MongoEngine(app)
+'''
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+client = MongoClient()
+db = client.carpools
+rides = db.rides
+'''
 
 ''' Asset bundles '''
 css = Bundle('style.css', 'show_rides.css')
@@ -37,6 +53,15 @@ app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 ''' Random stuff '''
 logger = app.logger
 
+
+
+''' Document definition '''
+class Ride(Document):
+    driver = StringField(required=True)
+    departure = StringField(required=True)
+    destination = StringField(required=True, unique_with='departure')
+    date = DateTimeField(required=True)
+    people = IntField(required=True)
 
 
 ''' App controllers '''
