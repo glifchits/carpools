@@ -1,11 +1,9 @@
-from pymongo import MongoClient
 from datetime import datetime, timedelta
 import random
 
+from mongoengine import *
+from app import Ride
 
-client = MongoClient()
-db = client.carpools
-rides = db.rides
 
 CITIES = set([
     "Waterloo", "Toronto", "Mississauga", "Kingston",
@@ -37,13 +35,26 @@ for i in range(10):
     )
     depart_time = now + timeoffset
 
-    ride = {
+    r = {
         'driver'      : random.choice(list(NAMES)),
         'departure'   : dep,
         'destination' : random.choice(list(CITIES - set(dep))),
         'people'      : random.randint(2,6),
         'depart-time' : depart_time
     }
-    rides.insert(ride)
+    ride = Ride(
+        driver = r['driver'],
+        departure = r['departure'],
+        destination = r['destination'],
+        depart_date = r['depart-time'],
+        people = r['people']
+    )
+    saved = False
+    while not saved:
+        try:
+            ride.save()
+            saved = True
+        except NotUniqueError as e:
+            ride.departure = random.choice(list(CITIES))
 
 

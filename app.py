@@ -55,13 +55,17 @@ logger = app.logger
 
 
 
-''' Document definition '''
+''' Document schema definition '''
 class Ride(Document):
     driver = StringField(required=True)
     departure = StringField(required=True)
     destination = StringField(required=True, unique_with='departure')
-    date = DateTimeField(required=True)
+    depart_date = DateTimeField(required=True)
     people = IntField(required=True)
+
+    def __unicode__(self):
+        return "%s, %s->%s" % \
+                (self.driver, self.departure, self.destination)
 
 
 ''' App controllers '''
@@ -107,24 +111,20 @@ def search_rides(departure, destination):
     ''' This function does the DB search '''
     dep = re.compile("^%s$" % departure, re.IGNORECASE)
     des = re.compile("^%s$" % destination, re.IGNORECASE)
-    matches = rides.find({
-        'departure'   : dep,
-        'destination' : des
-    })
+    matches = Ride.objects(
+        destination = des,
+        departure = dep
+    )
     if matches.count() == 0:
         logger.info("No matches found")
-        arriving = rides.find({
-            'destination' : des
-        })
-        departing = rides.find({
-            'departure' : dep
-        })
+        arriving = Ride.objects(destination = des)
+        departing = Ride.objects(departure = dep)
     else:
         arriving, departing = [], []
     results = (
-        [match for match in matches],
-        [arrival for arrival in arriving],
-        [departure for departure in departing]
+        matches, #[match for match in matches],
+        arriving, #[arrival for arrival in arriving],
+        departing, #[departure for departure in departing]
     )
     logger.debug(results)
     return results
@@ -148,15 +148,16 @@ def add_ride():
     datestr = date + " " + time
     fmt = "%Y-%m-%d %H:%M"
     depart_time = datetime.strptime(datestr, fmt)
-    ride = {
-        'driver'      : name,
-        'departure'   : departure,
-        'destination' : destination,
-        'people'      : people,
-        'depart-time' : depart_time
-    }
+
+    ride = Ride(
+        driver      = name,
+        departure   = departure,
+        destination = destination,
+        people      = people,
+        depart_time = depart_time
+    )
     try:
-        rides.insert(ride)
+        ride.save()
         return redirect(url_for('driver'))
     except Exception as e:
         flash("Could not add your ride: %s (%s)" % (str(e), e.message))
@@ -165,8 +166,12 @@ def add_ride():
 
 @app.route('/rides/<ride_id>')
 def get_ride(ride_id):
-    ride = rides.find_one({ '_id': ObjectId(str(ride_id)) })
-    return render_template('show_ride.html', ride=ride)
+    ride = Ride.objects(id=ride_id)
+    if len(ride) > 1:
+        flash("Non-unique ride ID")
+        return redirect(url_for('home'))
+    else:
+        return render_template('show_ride.html', ride=ride[0])
 
 
 if __name__ == '__main__':
