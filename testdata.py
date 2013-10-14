@@ -23,7 +23,7 @@ NAMES = set([
     "Shaminda", "Dave", "Mitch", "Gianni"
 ])
 
-for i in range(10):
+for i in range(1):
     dep = random.choice(list(CITIES))
 
     now = datetime.now()
@@ -49,12 +49,7 @@ for i in range(10):
         depart_date = r['depart-time'],
         people = r['people']
     )
-    saved = False
-    while not saved:
-        try:
-            ride.save()
-            saved = True
-        except NotUniqueError as e:
-            ride.departure = random.choice(list(CITIES))
+    ride.set_lat_long()
+    ride.save()
 
 
