@@ -2,7 +2,7 @@ DEBUG = True
 
 ''' Flask+extension imports '''
 from flask import Flask
-from flask import render_template, request, url_for, redirect, flash
+from flask import render_template, request, url_for, redirect, flash, session
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.assets import Environment, Bundle
 
@@ -132,6 +132,16 @@ def search_rides(departure, destination):
     )
     logger.debug(results)
     return results
+
+
+@app.route('/submit_location', methods=['POST'])
+def get_browser_location():
+    logger.debug("submit_location POST received")
+    logger.debug(request.values)
+    lat = request.values.get('lat')
+    lng = request.values.get('lng')
+    session.location = (lat, lng)
+    return "success"
 
 
 @app.route('/submit_ride', methods=['POST'])
