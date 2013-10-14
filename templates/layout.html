@@ -5,6 +5,8 @@
     {% assets "css" %}
     <link href='{{ ASSET_URL }}' rel=stylesheet type=text/css>
     {% endassets %}
+    {% block head %}
+    {% endblock %}
     <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'> 
   </head>
   <body>
@@ -21,5 +23,8 @@
       <p> &copy; George Lifchits 2013 </p>
       </footer>
     </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    {% block beforeclose %}
+    {% endblock %}
   </body>
 </html>
