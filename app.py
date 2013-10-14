@@ -50,8 +50,6 @@ class Ride(Document):
     destination = StringField(required=True)
     depart_date = DateTimeField(required=True)
     people = IntField(required=True)
-    depart_loc = PointField(required=True)
-    destination_loc = PointField(required=True)
 
     def set_lat_long(self):
         place, (lat, lng) = geo.geocode(self.departure)
@@ -73,7 +71,15 @@ def home():
 
 @app.route('/driver')
 def driver():
+    if 'username' not in session:
+        flash("You must be logged in to create a ride!")
+        return redirect(url_for('login'))
     return render_template('driver.html')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
 
 
 @app.route('/search', methods=['GET', 'POST'])
