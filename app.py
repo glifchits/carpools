@@ -82,7 +82,7 @@ def home():
 
 @app.route('/driver')
 def driver():
-    if 'username' not in session:
+    if 'user' not in session:
         flash("You must be logged in to create a ride!")
         return redirect(url_for('login'))
     return render_template('driver.html')
@@ -90,7 +90,30 @@ def driver():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'POST':
+        to_login = render_template('login.html')
+        LOGIN_ERR = "Your email address or password was incorrect."
+        try:
+            email = request.form['email']
+            password = request.form['password']
+        except KeyError as e:
+            flash("Malformed request (%s)" % e.message)
+            return to_login
+
+        match = Driver.objects(email = email)
+        if match.count() != 1:
+            flash(LOGIN_ERR)
+            return to_login
+        if match.password == password:
+            session['user'] = email
+            logger.log('user logged in: %s' % session['user'])
+            return redirect(url_for('driver'))
+        else:
+            flash(LOGIN_ERR)
+            return to_login
+
+    else: # request.method == 'GET'
+        return render_template('login.html')
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -104,7 +127,7 @@ def search():
             dep  = request.form['departure']
             dest = request.form['destination']
         except KeyError as e:
-            flash("Malformed request: %s" % e.msg)
+            flash("Malformed request: %s" % e.message)
             return redirect(url_for('home'))
 
         matches, arriving, departing = search_rides(dep, dest)
@@ -154,7 +177,6 @@ def search_rides(departure, destination):
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
     logger.debug("submit_location POST received")
-    logger.debug(request.values)
     lat = request.values.get('lat')
     lng = request.values.get('lng')
     session.location = (lat, lng)
