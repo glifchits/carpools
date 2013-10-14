@@ -6,6 +6,16 @@
 {% endblock %}
 
 {% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flash>
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
 <form id=ride-submit action=/login method=POST>
   <input name=username type=password placeholder="Username">
   <input name=password type=password placeholder="Password">
