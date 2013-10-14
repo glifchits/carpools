@@ -1,7 +1,10 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block head %}
+<link href='static/css/home.css' type='text/css' rel=stylesheet>
+{% endblock %}
 
+{% block content %}
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul class=errors>
@@ -28,4 +31,8 @@
     </span>
   </a>
 </div>
+{% endblock %}
+
+{% block beforeclose %}
+<script type='text/javascript' src='static/js/geolocation.js'></script>
 {% endblock %}
