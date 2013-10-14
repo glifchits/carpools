@@ -23,7 +23,7 @@ NAMES = set([
     "Shaminda", "Dave", "Mitch", "Gianni"
 ])
 
-for i in range(1):
+for i in range(99):
     dep = random.choice(list(CITIES))
 
     now = datetime.now()
@@ -49,7 +49,6 @@ for i in range(1):
         depart_date = r['depart-time'],
         people = r['people']
     )
-    ride.set_lat_long()
     ride.save()
 
 
