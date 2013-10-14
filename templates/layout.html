@@ -13,14 +13,14 @@
       <header>
       <a href='/'><h1>Carpools</h1></a>
       </header>
-      <div class=logged-in>
-        {% if 'user' in session %}
-          Hi, {{ session.user.name }}
-        {% else %}
-        <a href=/login>Login</a>
-        {% endif %}
-      </div>
       <div class=content>
+        <div class=logged-in>
+          {% if 'user' in session %}
+          Hi, {{ session.user.name }}
+          {% else %}
+          <a href=/login>Login</a>
+          {% endif %}
+        </div>
         {% block content %}
         <p>Welcome to Carpools!</p>
         {% endblock %}
