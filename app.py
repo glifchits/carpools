@@ -105,7 +105,7 @@ def login():
             flash("Your email address or password was incorrect.")
             return render_template('login.html')
         if match[0].password == password:
-            session['user'] = email
+            session['user'] = match[0]
             logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('driver'))
         else:
