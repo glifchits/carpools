@@ -45,6 +45,9 @@ geo = GoogleV3()      # see geopy
 
 ''' Document schema definition '''
 class Ride(Document):
+    '''Defines a ride; this is figuratively a car that is travelling from
+    `departure` to `destination`.
+    '''
     driver = StringField(required=True)
     departure = StringField(required=True)
     destination = StringField(required=True)
@@ -58,8 +61,16 @@ class Ride(Document):
         self.destination_loc = (lat, lng)
 
     def __unicode__(self):
-        return "%s, %s->%s" % \
-                (self.driver, self.departure, self.destination)
+        return "%s, %s->%s" % (self.driver, self.departure, self.destination)
+
+
+class Driver(Document):
+    '''A registered user who can sign up to be a driver'''
+    email = EmailField(required=True, unique=True)
+    name = StringField(required=True)
+
+    def __unicode__(self):
+        return "%s" % self.name
 
 
 ''' App controllers '''
