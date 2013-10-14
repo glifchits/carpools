@@ -30,8 +30,8 @@ app.config['MONGODB_SETTINGS'] = {'DB': 'carpools'}
 db = MongoEngine(app)
 
 ''' Asset bundles '''
-css = Bundle('style.css', 'home.css', 'show_results.css', 'show_ride.css', \
-    'normalize.css')
+css = Bundle('css/style.css', 'css/home.css', 'css/show_results.css', \
+    'css/show_ride.css', 'css/normalize.css')
 assets.register('css', css)
 
 ''' Other extensions '''

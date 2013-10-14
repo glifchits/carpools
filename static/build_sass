@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sass --update sass:.
-sass --watch sass:.
+sass --update sass:css
+sass --watch sass:css
