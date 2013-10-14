@@ -16,11 +16,14 @@
 {% endif %}
 {% endwith %}
 
-<form id=ride-submit action=/login method=POST>
+<form id=login action=/login method=POST>
   <input name=email type=text placeholder="Email address">
   <input name=password type=password placeholder="Password">
   <button type=submit>Login</button>
 </form>
+
+<a href=/register>Register</a>
+
 {% endblock %}
 
 {% block beforeclose %}

@@ -67,6 +67,7 @@ class Ride(Document):
 class Driver(Document):
     '''A registered user who can sign up to be a driver'''
     email = EmailField(required=True, unique=True)
+    password = StringField(required=True)
     name = StringField(required=True)
 
     def __unicode__(self):
@@ -91,10 +92,8 @@ def driver():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        to_login = render_template('login.html')
-        LOGIN_ERR = "Your email address or password was incorrect."
         try:
-            email = request.form['email']
+            email    = request.form['email']
             password = request.form['password']
         except KeyError as e:
             flash("Malformed request (%s)" % e.message)
@@ -102,18 +101,48 @@ def login():
 
         match = Driver.objects(email = email)
         if match.count() != 1:
-            flash(LOGIN_ERR)
-            return to_login
-        if match.password == password:
+            logger.debug("0 or >= 2 matches found")
+            flash("Your email address or password was incorrect.")
+            return render_template('login.html')
+        if match[0].password == password:
             session['user'] = email
-            logger.log('user logged in: %s' % session['user'])
+            logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('driver'))
         else:
-            flash(LOGIN_ERR)
-            return to_login
+            logger.debug("Incorrect password")
+            flash("Incorrect password")
+            return render_template('login.html')
 
     else: # request.method == 'GET'
         return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        try:
+            email    = request.form['email']
+            name     = request.form['name']
+            password = request.form['password']
+            confirm  = request.form['confirm-password']
+        except KeyError as e:
+            flash("Malformed request (%s)" % e.message)
+            return redirect(url_for('register'))
+
+        if password != confirm:
+            flash("Password did not match confirmation")
+            return redirect(url_for('register'))
+
+        driver = Driver(
+            email    = email,
+            name     = name,
+            password = password
+        )
+        driver.save()
+        flash("Register successful!")
+        return redirect(url_for('login'))
+    else: # request.method == 'GET'
+        return render_template('register.html')
 
 
 @app.route('/search', methods=['GET', 'POST'])
