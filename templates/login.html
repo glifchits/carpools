@@ -2,7 +2,7 @@
 
 {% block title %} | Login{% endblock %}
 {% block head %}
-
+<link href='/static/css/login.css' rel=stylesheet type=text/css>
 {% endblock %}
 
 {% block content %}
@@ -19,10 +19,14 @@
 <form id=login action=/login method=POST>
   <input name=email type=text placeholder="Email address">
   <input name=password type=password placeholder="Password">
-  <button type=submit>Login</button>
+  <div class=center>
+    <button type=submit>Login</button>
+  </div>
 </form>
 
-<a href=/register>Register</a>
+<div class=center>
+  <a class='register button' href=/register>Register to be a driver</a>
+</div>
 
 {% endblock %}
 
