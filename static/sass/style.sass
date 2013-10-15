@@ -1,5 +1,7 @@
 @import variables
 
+// global styles
+
 body 
   font-family: 'Varela Round', sans-serif
 
@@ -10,16 +12,56 @@ body
 .content 
   margin: 1em 
 
-header 
+.center
+  text-align: center
+
+form
+  padding: 0
+
+input
+  box-sizing: border-box
+  width: 100%
+  margin: 10px 0
+  padding: 5px
+  // these styles are really aesthetic now
+  border-radius: 5px
+  border: 1px solid $lightgrey
+  font-size: 20px
+  height: 40px
+  outline: none
+  &:focus
+    border: 1px solid $blue
+
+label
+  margin-top: 5px
+  margin-bottom: -5px
+
+button, a.button
+  display: inline-block 
+  text-align: center
+  text-decoration: none
+  border-radius: 5px
+  padding: 15px
+  margin: 10px 0
+
+
+header
   margin-bottom: 50px
   text-align: center 
   font-size: 40px
   font-weight: bold
-  a
+
+  a#wordmark
     text-decoration: none
     color: $blue
-  a:hover
-    color: $darkblue
+    &:hover
+      color: $darkblue
+
+  .logged-in
+    padding-top: 10px
+    font-size: 14px
+    color: $grey
+    text-align: right
 
 footer
   margin-top: 100px
