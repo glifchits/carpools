@@ -1,2 +1,41 @@
-.rides-info
-  color: grey
+@import variables
+
+.rides-count
+  display: block 
+  color: $deepgrey
+  margin-bottom: 10px
+
+.ride
+  width: 100%
+  display: inline-block 
+  padding: 10px 0
+  line-height: 25px
+  color: $darkgrey
+
+  span
+    color: black 
+
+  &:not(:last-child)
+    border-bottom: 1px solid $lightgrey
+
+  .pic
+    width: 50px
+    height: 50px
+    background: grey
+    border-radius: 25px
+    float: left
+    display: block
+    margin-right: 10px
+
+  .time
+    color: $grey
+    width: 100%
+    display: block 
+
+  .name
+    color: $blue
+
+  .book-it
+    float: right
+    a
+      text-decoration: none
