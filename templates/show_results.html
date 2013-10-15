@@ -48,18 +48,20 @@ Sorry, no one is arriving at {{ destination }} now!
   departing from {{ departure }}
   {% endif %}
 </span>
-{% for ride in rides %}
-<div class=ride>
-  <div class=pic></div>
-  <div class=ride-info>
-    <span class=time>Departing at {{ ride.depart_date|datetime }}</span>
-    <span class=name>{{ ride.driver }}</span>
-    <span class=departure>{{ ride.departure }}</span> to
-    <span class=destination>{{ ride.destination }}</span>
-    <span class=book-it><a href='/rides/{{ ride.id }}'>Book it</a></span>
+<div class=rides-grouping>
+  {% for ride in rides %}
+  <div class=ride>
+    <div class=pic></div>
+    <div class=ride-info>
+      <span class=time>Departing at {{ ride.depart_date|datetime }}</span>
+      <span class=name>{{ ride.driver }}</span>
+      <span class=departure>{{ ride.departure }}</span> to
+      <span class=destination>{{ ride.destination }}</span>
+      <span class=book-it><a href='/rides/{{ ride.id }}'>Book it</a></span>
+    </div>
   </div>
+  {% endfor %}
 </div>
-{% endfor %}
 {% endfor %} {# rides in [matches, arr, depr] #}
 {% endif %} {# absolutely nothing if stmt #}
 {% endblock %}
