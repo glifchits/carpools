@@ -9,15 +9,16 @@
 {% block content %}
 
 <div id=ride>
-  <div id=driver>
-    {{ ride.driver }}
-  </div>
   <div id=location>
-    {{ ride.departure }} -> {{ ride.destination }}
+    <span>{{ ride.departure }}</span> to
+    <span>{{ ride.destination }}</span>
+  </div>
+  <div id=driver>
+    <span>{{ ride.driver }}</span> is driving
   </div>
   <div id=info>
-    Departs at <span class="departure-time">{{ ride.depart_date }}</span><br/>
-    There are {{ ride.people }} spots in the vehicle
+    Departs at <span class="departure-time">{{ ride.depart_date|datetime }}</span><br/>
+    There are <span>{{ ride.people }}</span> spots in the vehicle
   </div>
 </div>
 
