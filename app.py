@@ -199,7 +199,12 @@ def add_ride():
     form = request.form
     logger.debug(form)
     try:
-        name        = form['name']
+        driver = session['user']
+    except:
+        flash("Not logged in")
+        return redirect(url_for('login'))
+
+    try:
         departure   = form['departure']
         destination = form['destination']
         date        = form['depart-date']
@@ -211,20 +216,21 @@ def add_ride():
 
     datestr = date + " " + time
     fmt = "%Y-%m-%d %H:%M"
-    depart_time = datetime.strptime(datestr, fmt)
+    depart_date = datetime.strptime(datestr, fmt)
 
     ride = Ride(
-        driver      = name,
+        driver      = driver,
         departure   = departure,
         destination = destination,
         people      = people,
-        depart_time = depart_time
+        depart_date = depart_date
     )
     try:
         ride.save()
-        return redirect(url_for('driver'))
+        flash("Your ride was added successfully!")
+        return redirect(url_for('home'))
     except Exception as e:
-        flash("Could not add your ride: %s (%s)" % (str(e), e.message))
+        flash("Could not add your ride: %s" % str(e))
         return redirect(url_for('home'))
 
 
