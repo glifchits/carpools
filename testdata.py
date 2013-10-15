@@ -2,7 +2,9 @@ from datetime import datetime, timedelta
 import random
 
 from mongoengine import *
-from app import Ride
+from schema import *
+
+connect('carpools')
 
 
 CITIES = set([
@@ -23,7 +25,30 @@ NAMES = set([
     "Shaminda", "Dave", "Mitch", "Gianni"
 ])
 
-for i in range(99):
+EMAILS = set([
+    "gmail.com", "hotmail.com", "yahoo.com", "mail.ru"
+])
+
+for i in range(40):
+    name = random.choice(list(NAMES))
+    email = name.lower() + '%s@' + random.choice(list(EMAILS))
+    password = 'password'
+    email_salt = ''
+
+    added = False
+    while not added:
+        try:
+            driver = Driver(
+                name = name,
+                email = email % email_salt,
+                password = password
+            ).save()
+            added = True
+        except NotUniqueError:
+            email_salt = str(random.randint(0,99))
+
+
+for i in range(100):
     dep = random.choice(list(CITIES))
 
     now = datetime.now()
@@ -35,19 +60,13 @@ for i in range(99):
     )
     depart_time = now + timeoffset
 
-    r = {
-        'driver'      : random.choice(list(NAMES)),
-        'departure'   : dep,
-        'destination' : random.choice(list(CITIES - set(dep))),
-        'people'      : random.randint(2,6),
-        'depart-time' : depart_time
-    }
+    driver = Driver.objects[random.randint(0, Driver.objects.count()-1)]
     ride = Ride(
-        driver = r['driver'],
-        departure = r['departure'],
-        destination = r['destination'],
-        depart_date = r['depart-time'],
-        people = r['people']
+        driver = driver,
+        departure = dep,
+        destination = random.choice(list(CITIES - set(dep))),
+        depart_date = depart_time,
+        people = random.randint(2,6)
     )
     ride.save()
 
