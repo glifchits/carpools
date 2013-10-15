@@ -45,6 +45,11 @@ logger = app.logger
 geo = GoogleV3()      # see geopy
 
 
+def format_datetime(value, format='%H:%M / %d-%m-%Y'):
+    return value.strftime(format)
+
+app.jinja_env.filters['datetime'] = format_datetime
+
 ''' App controllers '''
 
 @app.route('/')

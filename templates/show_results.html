@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 
 {% block title %} | Search results{% endblock %}
+
+{% block head %}
+<link href='static/css/show_results.css' rel=stylesheet type=text/css>
+{% endblock %}
+
 {% block content %}
 
 <h2>
@@ -34,7 +39,7 @@ Sorry, no one is arriving at {{ destination }} now!
 {% endif %}
 {% continue %}
 {% endif %}
-<span class=rides-info>
+<span class=rides-count>
   {{ rides|length }} ride{% if rides|length != 1 %}s{% endif %}
   found
   {% if name == "arriving" %}
@@ -44,12 +49,20 @@ Sorry, no one is arriving at {{ destination }} now!
   {% endif %}
 </span>
 {% for ride in rides %}
-<span class=time>{{ ride.depart_date }}</span></br>
-<span class=name>{{ ride.driver }}</span> is leaving
-<span class=departure>{{ ride.departure }}</span> to go to
-<span class=destination>{{ ride.destination }}</span>
-<span class=book-it><a href='/rides/{{ ride.id }}'>Book it</a></span>
+<div class=ride>
+  <div class=pic></div>
+  <div class=ride-info>
+    <span class=time>Departing at {{ ride.depart_date|datetime }}</span>
+    <span class=name>{{ ride.driver }}</span>
+    <span class=departure>{{ ride.departure }}</span> to
+    <span class=destination>{{ ride.destination }}</span>
+    <span class=book-it><a href='/rides/{{ ride.id }}'>Book it</a></span>
+  </div>
+</div>
 {% endfor %}
 {% endfor %} {# rides in [matches, arr, depr] #}
 {% endif %} {# absolutely nothing if stmt #}
+{% endblock %}
+
+{% block beforeclose %}
 {% endblock %}
