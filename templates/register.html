@@ -2,7 +2,7 @@
 
 {% block title %} | Login{% endblock %}
 {% block head %}
-
+<link href='/static/css/register.css' rel=stylesheet type=text/css>
 {% endblock %}
 
 {% block content %}
@@ -19,11 +19,13 @@
 <h2>Register as a new driver</h2>
 
 <form id=register action=/register method=POST>
-  <input name=email type=text placeholder="Email address"><br/>
-  <input name=name type=text placeholder="Your name"><br/>
-  <input name=password type=password placeholder="Password">
-  <input name=confirm-password type=password placeholder="Confirm password"><br/>
-  <button type=submit>Register</button>
+  <input name=name type=text placeholder="Your name" tabindex=1>
+  <input name=email type=text placeholder="Email address" tabindex=2>
+  <input name=password type=password placeholder="Password" tabindex=3>
+  <input name=confirm-password type=password placeholder="Confirm password" tabindex=4>
+  <div class=center>
+    <button type=submit tabindex=5>Register</button>
+  </div>
 </form>
 
 {% endblock %}
