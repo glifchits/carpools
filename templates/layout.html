@@ -21,6 +21,15 @@
       <a id=wordmark href='/'><h1>Carpools</h1></a>
       </header>
       <div class=content>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flash>
+          {% for status, message in messages %}
+          <li class={{ status }}>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         {% block content %}
         <p>Welcome to Carpools!</p>
         {% endblock %}

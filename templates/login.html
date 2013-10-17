@@ -6,16 +6,6 @@
 {% endblock %}
 
 {% block content %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class=flash>
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
-
 <form id=login action=/login method=POST>
   <input name=email type=text placeholder="Email address" tabindex=1>
   <input name=password type=password placeholder="Password" tabindex=2>

@@ -6,16 +6,6 @@
 {% endblock %}
 
 {% block content %}
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<ul class=flash>
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% endwith %}
-
 <h2>Register as a new driver</h2>
 
 <form id=register action=/register method=POST>
