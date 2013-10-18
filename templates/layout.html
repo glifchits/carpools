@@ -24,8 +24,9 @@
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <ul class=flash>
-          {% for status, message in messages %}
-          <li class={{ status }}>{{ message }}</li>
+          {% for message in messages %}
+          {% set status, msg_text = message %}
+          <li class={{ status }}>{{ msg_text }}</li>
           {% endfor %}
         </ul>
         {% endif %}
