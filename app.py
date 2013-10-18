@@ -14,6 +14,9 @@ from geopy.geocoders import GoogleV3
 
 from schema import *
 
+CSS_ERR = 'error'
+CSS_SUCC = 'success'
+
 
 ''' Flask app setup '''
 app = Flask(__name__)
@@ -60,7 +63,7 @@ def home():
 @app.route('/driver')
 def driver():
     if 'user' not in session:
-        flash("You must be logged in to create a ride!")
+        flash((CSS_ERR, "You must be logged in to create a ride!"))
         return redirect(url_for('login'))
     return render_template('driver.html')
 
@@ -72,13 +75,13 @@ def login():
             email    = request.form['email']
             password = request.form['password']
         except KeyError as e:
-            flash("Malformed request (%s)" % e.message)
+            flash((CSS_ERR, "Malformed request (%s)" % e.message))
             return to_login
 
         match = Driver.objects(email = email)
         if match.count() != 1:
             logger.debug("0 or >= 2 matches found")
-            flash("Your email address or password was incorrect.")
+            flash((CSS_ERR, "Your email address or password was incorrect."))
             return render_template('login.html')
         if match[0].password == password:
             session['user'] = match[0]
@@ -86,7 +89,7 @@ def login():
             return redirect(url_for('driver'))
         else:
             logger.debug("Incorrect password")
-            flash("Incorrect password")
+            flash((CSS_ERR, "Incorrect password"))
             return render_template('login.html')
 
     else: # request.method == 'GET'
@@ -108,11 +111,11 @@ def register():
             password = request.form['password']
             confirm  = request.form['confirm-password']
         except KeyError as e:
-            flash("Malformed request (%s)" % e.message)
+            flash((CSS_ERR, "Malformed request (%s)" % e.message))
             return redirect(url_for('register'))
 
         if password != confirm:
-            flash("Password did not match confirmation")
+            flash((CSS_ERR, "Password did not match confirmation"))
             return redirect(url_for('register'))
 
         driver = Driver(
@@ -121,7 +124,7 @@ def register():
             password = password
         )
         driver.save()
-        flash("Register successful!")
+        flash((CSS_SUCC, "Register successful!"))
         return redirect(url_for('login'))
     else: # request.method == 'GET'
         return render_template('register.html')
@@ -132,13 +135,13 @@ def search():
     if request.method == 'POST':
         try: # no parameters
             if not request.form['departure'] and not request.form['destination']:
-                flash("No search parameters provided")
+                flash((CSS_ERR, "No search parameters provided"))
                 return redirect(url_for('home'))
             # parameters
             dep  = request.form['departure']
             dest = request.form['destination']
         except KeyError as e:
-            flash("Malformed request: %s" % e.message)
+            flash((CSS_ERR, "Malformed request: %s" % e.message))
             return redirect(url_for('home'))
 
         matches, arriving, departing = search_rides(dep, dest)
@@ -201,7 +204,7 @@ def add_ride():
     try:
         driver = session['user']
     except:
-        flash("Not logged in")
+        flash((CSS_ERR, "Not logged in"))
         return redirect(url_for('login'))
 
     try:
@@ -211,7 +214,7 @@ def add_ride():
         time        = form['depart-time']
         people      = form['people']
     except KeyError as e:
-        flash('Malformed request: %s (%s)' % (str(e), e.message))
+        flash((CSS_ERR, 'Malformed request: %s (%s)' % (str(e), e.message)))
         return redirect(url_for('home'))
 
     datestr = date + " " + time
@@ -227,10 +230,10 @@ def add_ride():
     )
     try:
         ride.save()
-        flash("Your ride was added successfully!")
+        flash((CSS_SUCC, "Your ride was added successfully!"))
         return redirect(url_for('home'))
     except Exception as e:
-        flash("Could not add your ride: %s" % str(e))
+        flash((CSS_ERR, "Could not add your ride: %s" % str(e)))
         return redirect(url_for('home'))
 
 
@@ -238,7 +241,7 @@ def add_ride():
 def get_ride(ride_id):
     ride = Ride.objects(id=ride_id)
     if len(ride) > 1:
-        flash("Non-unique ride ID")
+        flash((CSS_ERR, "Non-unique ride ID"))
         return redirect(url_for('home'))
     else:
         return render_template('show_ride.html', ride=ride[0])
