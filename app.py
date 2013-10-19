@@ -217,9 +217,17 @@ def add_ride():
         flash((CSS_ERR, 'Malformed request: %s (%s)' % (str(e), e.message)))
         return redirect(url_for('home'))
 
-    datestr = date + " " + time
-    fmt = "%Y-%m-%d %H:%M"
-    depart_date = datetime.strptime(datestr, fmt)
+    if '' in [departure, destination, date, time, people]:
+        flash((CSS_ERR, 'You should fill out every value in the form!'))
+        return redirect(url_for('driver'))
+
+    try:
+        datestr = date + " " + time
+        fmt = "%Y-%m-%d %H:%M"
+        depart_date = datetime.strptime(datestr, fmt)
+    except ValueError as e:
+        flash((CSS_ERR, 'The entered date was invalid (%s)' % e.message))
+        return redirect(url_for('add_ride'))
 
     ride = Ride(
         driver      = driver,
