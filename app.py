@@ -254,6 +254,15 @@ def get_ride(ride_id):
     else:
         return render_template('show_ride.html', ride=ride[0])
 
+@app.route('/profile')
+def edit_profile():
+    ''' This controller allows someone to edit their own profile. '''
+    return "profile page"
+
+@app.route('/profile/<user_id>')
+def view_profile(user_id):
+    return "profile page for user %s" % user_id
+
 
 if __name__ == '__main__':
     app.run()
