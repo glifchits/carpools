@@ -262,8 +262,8 @@ def edit_profile():
 
 
 @app.route('/profile/<user_id>')
-    ''' Renders an individual user profile. '''
 def view_profile(user_id):
+    ''' Renders an individual user profile. '''
     return "profile page for user %s" % user_id
 
 
