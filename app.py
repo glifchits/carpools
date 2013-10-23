@@ -247,9 +247,18 @@ def add_ride():
 
 @app.route('/rides/<ride_id>')
 def get_ride(ride_id):
-    ride = Ride.objects(id=ride_id)
+    try:
+        ride = Ride.objects(id=ride_id)
+        assert ride
+    except AssertionError:
+        logger.debug('caught bad ride id')
+        flash((CSS_ERR, "Invalid ride ID"))
+        return redirect(url_for('home'))
     if len(ride) > 1:
         flash((CSS_ERR, "Non-unique ride ID"))
+        return redirect(url_for('home'))
+    elif len(ride) == 0:
+        flash((CSS_ERR, "No ride with that ID!"))
         return redirect(url_for('home'))
     else:
         return render_template('show_ride.html', ride=ride[0])
