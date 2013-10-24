@@ -123,7 +123,13 @@ def register():
             name     = name,
             password = password
         )
-        driver.save()
+        try:
+            driver.save()
+        except Exception as e:
+            logger.debug(type(e))
+            flash((CSS_ERR, "A user with that email already exists."))
+            return redirect(url_for('register'))
+
         flash((CSS_SUCC, "Register successful!"))
         return redirect(url_for('login'))
     else: # request.method == 'GET'
