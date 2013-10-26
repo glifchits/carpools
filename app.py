@@ -45,7 +45,7 @@ app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 ''' Random stuff '''
 logger = app.logger
-geo = GoogleV3()      # see geopy
+#geo = GoogleV3()      # see geopy
 
 
 def format_datetime(value, format='%I:%M %p on %a, %b %d'):
@@ -84,7 +84,7 @@ def login():
             flash((CSS_ERR, "Your email address or password was incorrect."))
             return render_template('login.html')
         if match[0].password == password:
-            session['user'] = match[0]
+            session['user'] = match[0].to_json()
             logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('driver'))
         else:
