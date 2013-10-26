@@ -10,6 +10,7 @@ from flask.ext.assets import Environment, Bundle
 from datetime import datetime, timedelta
 import os
 import re
+import json
 from geopy.geocoders import GoogleV3
 
 from schema import *
@@ -84,7 +85,7 @@ def login():
             flash((CSS_ERR, "Your email address or password was incorrect."))
             return render_template('login.html')
         if match[0].password == password:
-            session['user'] = match[0].to_json()
+            session['user'] = json.loads(match[0].to_json())
             logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('driver'))
         else:
