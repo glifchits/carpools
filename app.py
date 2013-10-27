@@ -85,6 +85,7 @@ def login():
             flash((CSS_ERR, "Your email address or password was incorrect."))
             return render_template('login.html')
         if match[0].password == password:
+            # the line below was a lot nicer before OSX Mavericks.
             session['user'] = json.loads(match[0].to_json())
             logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('driver'))
