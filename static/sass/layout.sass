@@ -1,6 +1,6 @@
 @import variables
 
-// global styles
+/* global styles */
 
 body 
   font-family: 'Varela Round', sans-serif
@@ -92,11 +92,12 @@ header
       border-right: 1px solid $grey
       padding-right: 8px
     a
-      padding-left: 5px
       text-decoration: none
       color: $blue
       &:hover
         color: $darkblue
+      &.login, &.logout
+        padding-left: 5px
 
 footer
   margin-top: 100px

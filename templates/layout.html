@@ -3,7 +3,7 @@
   <head>
     <title>Carpools{% block title %}{% endblock %}</title>
     <link href='/static/css/normalize.css' rel=stylesheet type=text/css>
-    <link href='/static/css/style.css' rel=stylesheet type=text/css>
+    <link href='/static/css/layout.css' rel=stylesheet type=text/css>
     {% block head %}
     {% endblock %}
     <link href='http://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'> 
@@ -13,9 +13,9 @@
       <header>
       <div class=logged-in>
         {% if 'user' in session %}
-        <span>Hi, {{ session.user.name }}</span> <a href=/logout>Log out</a>
+        <span>Hi, <a href=/profile>{{ session.user.name }}</a></span> <a href=/logout class=logout>Log out</a>
         {% else %}
-        <a href=/login>Login</a>
+        <a href=/login class=login>Login</a>
         {% endif %}
       </div>
       <a id=wordmark href='/'><h1>Carpools</h1></a>
