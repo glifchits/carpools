@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %} | Profile{% endblock %}
+
+{% block head %}
+<link href='/static/css/profile.css' rel=stylesheet type=text/css>
+{% endblock %}
+
+{% block content %}
+
+<div id=profile>
+
+  <div id=picture>
+    <img src=http://placehold.it/150x150><img>
+  </div>
+
+  <div id=info>
+    <span class=name>Person's name</span>
+    <div class=contact>
+      <div id=phone>
+        <span class=desc>Phone number</span>
+        <span class=content>555-555-5512</span>
+      </div>
+      <div id=facebook>
+        <span class=desc>Facebook profile</span>
+        <span class=content><a href=http://facebook.com/zuck></a></span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
