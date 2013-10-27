@@ -275,7 +275,7 @@ def get_ride(ride_id):
 @app.route('/profile')
 def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
-    return "profile page"
+    return render_template('profile.html')
 
 
 @app.route('/profile/<user_id>')
