@@ -15,7 +15,12 @@
   </div>
 
   <div id=info>
-    <span class=name>Person's name</span>
+    <div class=profile-header>
+      <span class=name>{{ user.name }}</span>
+      {% if session.user.email == user.email %}
+      <a href=#>Edit</a>
+      {% endif %}
+    </div>
     <div class=contact>
       <div id=phone>
         <span class=desc>Phone number</span>

@@ -13,12 +13,23 @@
 #info
   display: table-cell
   vertical-align: top
-  .name
-    display: block
-    font-size: 24px
+  .profile-header
     padding-bottom: 10px
     margin-bottom: 20px
     border-bottom: 1px solid $grey
+    .name
+      font-size: 24px
+    a
+      float: right
+      font-size: 14px
+      border: 1px solid $grey
+      border-radius: 4px
+      padding: 5px
+      text-decoration: none
+      color: $blue
+      &:hover
+        color: $darkblue
+
 
   .contact
     .desc
