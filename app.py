@@ -286,6 +286,11 @@ def edit_profile():
 def view_profile(user_id):
     ''' Renders an individual user profile. '''
     match = Driver.objects(id = user_id)
+    try:
+        assert match
+    except AssertionError:
+        flash((CSS_ERR, "Invalid profile ID"))
+        return redirect(url_for('home'))
     logger.debug(match)
     if match.count() != 1:
         flash((CSS_ERR, "No user with that profile ID was found."))
