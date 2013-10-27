@@ -285,7 +285,12 @@ def edit_profile():
 @app.route('/profile/<user_id>')
 def view_profile(user_id):
     ''' Renders an individual user profile. '''
-    return "profile page for user %s" % user_id
+    match = Driver.objects(id = user_id)
+    logger.debug(match)
+    if match.count() != 1:
+        flash((CSS_ERR, "No user with that profile ID was found."))
+        return redirect(url_for('home'))
+    return render_template('profile.html', user=match[0])
 
 
 if __name__ == '__main__':
