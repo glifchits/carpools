@@ -275,7 +275,11 @@ def get_ride(ride_id):
 @app.route('/profile')
 def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
-    return render_template('profile.html')
+    if 'user' in session:
+        return render_template('profile.html', user=session['user'])
+    else:
+        flash((CSS_ERR, "You have to be logged in to view your profile!"))
+        return redirect(url_for('login'))
 
 
 @app.route('/profile/<user_id>')
