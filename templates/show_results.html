@@ -54,7 +54,7 @@ Sorry, no one is arriving at {{ destination }} now!
     <div class=pic></div>
     <div class=ride-info>
       <span class=time>Departing at {{ ride.depart_date|datetime }}</span>
-      <span class=name>{{ ride.driver }}</span>
+      <span class=name><a href="/profile/{{ ride.driver.id }}">{{ ride.driver }}</a></span>
       <span class=departure>{{ ride.departure }}</span> to
       <span class=destination>{{ ride.destination }}</span>
       <span class=book-it><a href='/rides/{{ ride.id }}'>Book it</a></span>
