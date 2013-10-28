@@ -22,13 +22,17 @@
       {% endif %}
     </div>
     <div class=contact>
+      <div id=email>
+        <span>Email</span>
+        <span><a href=mailto:{{ user.email }}>{{ user.email}}</a></span>
+      </div>
       <div id=phone>
-        <span class=desc>Phone number</span>
-        <span class=content>555-555-5512</span>
+        <span>Phone</span>
+        <span>555-555-5512</span>
       </div>
       <div id=facebook>
-        <span class=desc>Facebook profile</span>
-        <span class=content><a href=http://facebook.com/zuck></a></span>
+        <span>Facebook</span>
+        <span><a href=http://facebook.com/zuck>facebook.com/zuck</a></span>
       </div>
     </div>
   </div>
