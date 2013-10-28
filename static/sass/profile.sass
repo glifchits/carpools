@@ -12,11 +12,14 @@
 
 #info
   display: table-cell
+  width: 100%
   vertical-align: top
+
   .profile-header
     padding-bottom: 10px
     margin-bottom: 20px
     border-bottom: 1px solid $grey
+
     .name
       font-size: 24px
     a
@@ -32,16 +35,17 @@
 
 
   .contact
-    .desc
-      color: $grey
+    span
+      line-height: 30px
+      &:first-child 
+        display: inline-block
+        width: 6em
+        color: $grey
 
-    .content
-      a
-        text-decoration: none
-        color: $blue
-        &:hover
-          color: $darkblue
-      a:after
-        content: attr(href)
-
+      &:not(first-child) 
+        a
+          text-decoration: none
+          color: $blue
+          &:hover
+            color: $darkblue
 
