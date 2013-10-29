@@ -4,6 +4,17 @@
 #profile
   display: table
 
+.editable
+  border: 1px solid transparent
+  padding: 2px
+  margin: 2px
+
+#profile.edit-mode
+  .editable
+    border: 1px solid $grey
+    &:hover
+      border-color: $green
+
 #picture
   display: table-cell
   padding-right: 20px
@@ -20,18 +31,18 @@
     margin-bottom: 20px
     border-bottom: 1px solid $grey
 
-    .name
+    span
       font-size: 24px
-    a
+    a#edit-button
       float: right
       font-size: 14px
       border: 1px solid $grey
       border-radius: 4px
       padding: 5px
-      text-decoration: none
-      color: $blue
-      &:hover
-        color: $darkblue
+      &.save-button
+        border-color: $darkgreen
+        background-color: $green
+        color: white
 
 
   .contact
