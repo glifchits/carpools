@@ -16,27 +16,47 @@
 
   <div id=info>
     <div class=profile-header>
-      <span class=name>{{ user.name }}</span>
+      <span class=editable>{{ user.name }}</span>
       {% if 'user' in session and session.user.email == user.email %}
-      <a href=#>Edit</a>
+      <a id=edit-button href=#>Edit</a>
       {% endif %}
     </div>
     <div class=contact>
       <div id=email>
         <span>Email</span>
-        <span><a href=mailto:{{ user.email }}>{{ user.email}}</a></span>
+        <span class=editable><a href=mailto:{{ user.email }}>{{ user.email}}</a></span>
       </div>
       <div id=phone>
         <span>Phone</span>
-        <span>555-555-5512</span>
+        <span class=editable>555-555-5512</span>
       </div>
       <div id=facebook>
         <span>Facebook</span>
-        <span><a href=http://facebook.com/zuck>facebook.com/zuck</a></span>
+        <span class=editable><a href=http://facebook.com/zuck>facebook.com/zuck</a></span>
       </div>
     </div>
   </div>
 
 </div>
+
+<script type=text/javascript>
+  $('#edit-button').click(function() {
+      var profile = $('#profile');
+
+      if (!(profile.hasClass('edit-mode'))) {
+        // edits allowed
+        console.log('edit clicked');
+        profile.addClass('edit-mode');
+        $('#edit-button').text('Save').addClass('save-button');
+
+      } else {
+        // save changes
+        console.debug('save clicked');
+        profile.removeClass('edit-mode');
+        $('#edit-button').text('Edit').removeClass('save-button');
+
+      }
+  });
+</script>
 
 {% endblock %}
