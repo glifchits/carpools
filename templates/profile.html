@@ -15,24 +15,24 @@
   </div>
 
   <div id=info>
-    <div class=profile-header>
-      <span class=editable>{{ user.name }}</span>
+    <div id=profile-header>
+      <input type=text value="{{ user.name }}" disabled>
       {% if 'user' in session and session.user.email == user.email %}
       <a id=edit-button href=#>Edit</a>
       {% endif %}
     </div>
-    <div class=contact>
+    <div id=contact>
       <div id=email>
         <span>Email</span>
-        <span class=editable><a href=mailto:{{ user.email }}>{{ user.email}}</a></span>
+        <input type=text value="{{ user.email }}" disabled>
       </div>
       <div id=phone>
         <span>Phone</span>
-        <span class=editable>555-555-5512</span>
+        <input type=text value="555-555-5512" disabled>
       </div>
       <div id=facebook>
         <span>Facebook</span>
-        <span class=editable><a href=http://facebook.com/zuck>facebook.com/zuck</a></span>
+        <input type=text value="facebook.com/zuck" disabled>
       </div>
     </div>
   </div>
@@ -48,13 +48,18 @@
         console.log('edit clicked');
         profile.addClass('edit-mode');
         $('#edit-button').text('Save').addClass('save-button');
+        $('#profile input').each(function() {
+          $(this).removeAttr('disabled');
+        });
 
       } else {
         // save changes
         console.debug('save clicked');
         profile.removeClass('edit-mode');
         $('#edit-button').text('Edit').removeClass('save-button');
-
+        $('#profile input').each(function() {
+          $(this).prop('disabled', true);
+        });
       }
   });
 </script>
