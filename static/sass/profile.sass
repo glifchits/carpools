@@ -9,11 +9,29 @@
   padding: 2px
   margin: 2px
 
-#profile.edit-mode
-  .editable
-    border: 1px solid $grey
-    &:hover
-      border-color: $green
+#profile
+  #contact
+    div
+      display: table
+      width: 100%
+      span
+        display: table-cell
+        margin-right: 15px
+        color: $grey
+        width: 6em
+      input
+        display: table-cell
+        width: 100%
+  input
+    border: none
+    border-radius: 0
+    font-size: 16px
+    padding: 0
+    margin: 0
+    &:not(disabled)
+      color: green
+    &:disabled
+      color: black 
 
 #picture
   display: table-cell
@@ -26,37 +44,22 @@
   width: 100%
   vertical-align: top
 
-  .profile-header
+  #profile-header
     padding-bottom: 10px
     margin-bottom: 20px
     border-bottom: 1px solid $grey
 
-    span
+    input
+      width: inherit
       font-size: 24px
     a#edit-button
       float: right
       font-size: 14px
       border: 1px solid $grey
       border-radius: 4px
-      padding: 5px
+      padding: 8px
       &.save-button
         border-color: $darkgreen
         background-color: $green
         color: white
-
-
-  .contact
-    span
-      line-height: 30px
-      &:first-child 
-        display: inline-block
-        width: 6em
-        color: $grey
-
-      &:not(first-child) 
-        a
-          text-decoration: none
-          color: $blue
-          &:hover
-            color: $darkblue
 
