@@ -1,3 +1,13 @@
+var getFields = function() {
+    var json = {};
+    $('#profile input').each(function() {
+        var id = this.id;
+        json[id] = this.value;
+    });
+    return json;
+};
+
+
 $('#edit-button').click(function() {
     var profile = $('#profile');
 
@@ -13,6 +23,12 @@ $('#edit-button').click(function() {
     } else {
         // save changes
         console.debug('save clicked');
+    
+        /* save profile logic */
+        var fieldsOnSave = getFields();
+        $.post('/profile/save_changes', fieldsOnSave);
+
+        /* restore page to non-edit mode */
         profile.removeClass('edit-mode');
         $('#edit-button').text('Edit').removeClass('save-button');
         $('#profile input').each(function() {
