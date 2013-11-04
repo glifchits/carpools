@@ -11,6 +11,8 @@ class Driver(Document):
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
     name = StringField(required=True)
+    phone = StringField()
+    facebook = StringField()
 
     def __unicode__(self):
         return "%s" % self.name
