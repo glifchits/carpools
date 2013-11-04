@@ -27,14 +27,18 @@
         <span>Email</span>
         <span id=profile-email>{{ user.email }}</span>
       </div>
+      {% if user.phone %}
       <div id=phone>
         <span>Phone</span>
-        <span id=profile-phone>555-555-5512</span>
+        <span id=profile-phone>{{ user.phone }}</span>
       </div>
+      {% endif %}
+      {% if user.facebook %}
       <div id=facebook>
         <span>Facebook</span>
-        <span id=profile-facebook>facebook.com/zuck</span>
+        <span id=profile-facebook>{{ user.facebook }}</span>
       </div>
+      {% endif %}
     </div>
   </div>
 
