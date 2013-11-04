@@ -282,6 +282,26 @@ def edit_profile():
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
         return redirect(url_for('login'))
 
+@app.route('/profile/save_changes', methods=['POST'])
+def save_profile():
+    ''' Accepts a save profile POST request. '''
+    form = request.form
+    logger.debug(form)
+    attribs = {
+        'name': 'profile-name',
+        'facebook': 'profile-facebook',
+        'phone': 'profile-phone',
+        'email': 'profile-email'
+    }
+    if 'user' in session:
+        user = session['user']
+        logger.debug('modifying' + str(user))
+
+    for attr in attribs.keys():
+        user[attr] = form[attribs[attr]]
+
+    return '200'
+
 
 @app.route('/profile/<user_id>')
 def view_profile(user_id):
@@ -297,6 +317,7 @@ def view_profile(user_id):
         flash((CSS_ERR, "No user with that profile ID was found."))
         return redirect(url_for('home'))
     return render_template('profile.html', user=match[0])
+
 
 
 if __name__ == '__main__':
