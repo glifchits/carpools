@@ -8,6 +8,7 @@ var getFields = function() {
 };
 
 var changeToInputs = function() {
+    console.debug("changing spans to inputs");
     $('span[id^=profile]').each(function() {
         var newHTML = "<input type=text ";
         console.debug(this);
@@ -19,12 +20,13 @@ var changeToInputs = function() {
         for (attr in attrs)
             newHTML += attr + '="' + attrs[attr] + '" ';
         newHTML += '>';
-        console.debug('html changed to', newHTML);
+        console.debug('span changing to input', newHTML);
         this.outerHTML = newHTML;
     });
 };
 
 var changeToSpans = function() {
+    console.debug("changing inputs to spans");
     $('input[id^=profile]').each(function() {
         console.debug(this);
         var newHTML = "<span ";
@@ -35,8 +37,8 @@ var changeToSpans = function() {
         };
         for (attr in attrs) 
             newHTML += attr + '="' + attrs[attr] + '" ';
-        newHTML + '>' + value + '</span>';
-        console.debug(newHTML);
+        newHTML += '>' + value + '</span>';
+        console.debug('input changing to span', newHTML);
         this.outerHTML = newHTML;
     });
 };
