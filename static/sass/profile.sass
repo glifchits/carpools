@@ -12,7 +12,27 @@
   padding: 2px
   margin: 2px
 
+/* apply to span->input elements */
+span[id^=profile], input[id^=profile]
+  font-size: 16px
+  height: 30px
+  line-height: 30px
+  margin: 0
+  padding: 0
+  border: none
+  border-radius: 0
+
+input
+  /* apply to all inputs */
+  color: $green
+  &:hover
+    color: $darkgreen
+  &:focus
+    border: none
+    color: black
+
 #profile.edit-mode
+  /* this is all for overlay stuff */
   #overlay
     display: block
     position: absolute
@@ -30,23 +50,6 @@
     left: -1px
     position: relative
     z-index: 10
-
-input
-  /* these apply to all inputs */
-  border: none
-  border-radius: 0
-  font-size: 16px
-  padding: 3px
-  margin: 1px 0
-  &:disabled
-    color: black
-  &:not(:disabled)
-    color: $green
-    &:hover
-      color: $darkgreen
-    &:focus
-      border: none
-      color: black
 
 #profile
   #picture
@@ -67,7 +70,7 @@ input
       margin-bottom: 20px
       border-bottom: 1px solid $grey
 
-      input
+      #profile-name
         /* this is the profile header (name) */
         width: inherit
         font-size: 24px
@@ -88,7 +91,7 @@ input
       div
         display: table
         width: 100%
-        span
+        span:first-child
           display: table-cell
           margin-right: 15px
           color: $grey
