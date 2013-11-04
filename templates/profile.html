@@ -17,7 +17,7 @@
 
   <div id=info>
     <div id=profile-header>
-      <input id=profile-name type=text value="{{ user.name }}" disabled>
+      <span id=profile-name>{{ user.name }}</span>
       {% if 'user' in session and session.user.email == user.email %}
       <a id=edit-button href=#>Edit</a>
       {% endif %}
@@ -25,15 +25,15 @@
     <div id=contact>
       <div id=email>
         <span>Email</span>
-        <input id=profile-email type=text value="{{ user.email }}" disabled>
+        <span id=profile-email>{{ user.email }}</span>
       </div>
       <div id=phone>
         <span>Phone</span>
-        <input id=profile-phone type=text value="555-555-5512" disabled>
+        <span id=profile-phone>555-555-5512</span>
       </div>
       <div id=facebook>
         <span>Facebook</span>
-        <input id=profile-facebook type=text value="facebook.com/zuck" disabled>
+        <span id=profile-facebook>facebook.com/zuck</span>
       </div>
     </div>
   </div>

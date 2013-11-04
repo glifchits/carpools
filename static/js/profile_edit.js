@@ -7,6 +7,40 @@ var getFields = function() {
     return json;
 };
 
+var changeToInputs = function() {
+    $('span[id^=profile]').each(function() {
+        var newHTML = "<input type=text ";
+        console.debug(this);
+        var attrs = {
+            "class" : $(this).attr('class'),
+            "id" : $(this).attr('id'),
+            "value" : $(this).html()
+        };
+        for (attr in attrs)
+            newHTML += attr + '="' + attrs[attr] + '" ';
+        newHTML += '>';
+        console.debug('html changed to', newHTML);
+        this.outerHTML = newHTML;
+    });
+};
+
+var changeToSpans = function() {
+    $('input[id^=profile]').each(function() {
+        console.debug(this);
+        var newHTML = "<span ";
+        var value = $(this).attr('value');
+        var attrs = {
+            "class" : $(this).attr('class'),
+            "id" : $(this).attr('id')
+        };
+        for (attr in attrs) 
+            newHTML += attr + '="' + attrs[attr] + '" ';
+        newHTML + '>' + value + '</span>';
+        console.debug(newHTML);
+        this.outerHTML = newHTML;
+    });
+};
+
 
 $('#edit-button').click(function() {
     var profile = $('#profile');
@@ -16,10 +50,7 @@ $('#edit-button').click(function() {
         console.log('edit clicked');
         profile.addClass('edit-mode');
         $('#edit-button').text('Save').addClass('save-button');
-        $('#profile input').each(function() {
-            $(this).removeAttr('disabled');
-        });
-
+        changeToInputs();
     } else {
         // save changes
         console.debug('save clicked');
@@ -31,9 +62,7 @@ $('#edit-button').click(function() {
         /* restore page to non-edit mode */
         profile.removeClass('edit-mode');
         $('#edit-button').text('Edit').removeClass('save-button');
-        $('#profile input').each(function() {
-            $(this).prop('disabled', true);
-        });
+        changeToSpans();
     }
 });
 
