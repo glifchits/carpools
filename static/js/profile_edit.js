@@ -13,7 +13,7 @@ var changeToInputs = function() {
         var newHTML = "<input type=text ";
         console.debug(this);
         var attrs = {
-            "class" : $(this).attr('class'),
+            "class" : this.className,
             "id" : $(this).attr('id'),
             "value" : $(this).html()
         };
@@ -30,9 +30,9 @@ var changeToSpans = function() {
     $('input[id^=profile]').each(function() {
         console.debug(this);
         var newHTML = "<span ";
-        var value = $(this).attr('value');
+        var value = this.value;
         var attrs = {
-            "class" : $(this).attr('class'),
+            "class" : this.className,
             "id" : $(this).attr('id')
         };
         for (attr in attrs) 
