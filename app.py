@@ -111,26 +111,31 @@ def fb_auth():
 
     url = "https://graph.facebook.com/oauth/access_token?"
     url += "client_id=%s&redirect_uri=%s&client_secret=%s&code=%s"
-
     request_url = url % (app_id, redirecturi, app_secret, code)
-
     r = requests.get(request_url)
-    logger.debug(r.text)
 
     if r.status_code != requests.codes.ok:
-        return str(r.status_code) + r.text
-
+        return str(r.status_code) + " " + r.text
     values = {}
     for elem in r.text.split("&"):
         key, value = elem.split("=")
         values[key] = value
+    access_token = values['access_token']
+    input_token = access_token
 
-    logger.debug(values)
+    url = "https://graph.facebook.com/debug_token?input_token=%s&access_token=%s"
+    request_url = url % (input_token, access_token)
+    r = requests.get(request_url)
+
+    if r.status_code != requests.codes.ok:
+        return str(r.status_code) + " " + r.text
+
+    logger.debug(r)
+    logger.debug(r.text)
+    logger.debug(r.json())
+
 
     flash((CSS_SUCC, "FB auth good"))
-
-    logger.debug(redirect)
-
     return redirect(url_for('home'))
 
 
