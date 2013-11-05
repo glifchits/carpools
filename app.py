@@ -130,10 +130,15 @@ def fb_auth():
     if r.status_code != requests.codes.ok:
         return str(r.status_code) + " " + r.text
 
-    logger.debug(r)
-    logger.debug(r.text)
-    logger.debug(r.json())
+    values = r.json()['data']
+    logger.debug(values)
 
+    fb = Facebook(
+        access_token = access_token,
+        user_id = values['user_id'],
+        expires_at = values['expires_at'],
+    )
+    fb.save()
 
     flash((CSS_SUCC, "FB auth good"))
     return redirect(url_for('home'))

@@ -4,6 +4,20 @@ This contains the schemas for `carpools`
 '''
 
 from mongoengine import *
+import time
+
+
+class Facebook(Document):
+    '''Facebook connect credentials'''
+    user_id = IntField(required=True)
+    access_token = StringField(required=True)
+    expires_at = IntField(required=True)
+
+    def is_expired(self):
+        return int(time.time()) >= self.expires_at
+
+    def __unicode__(self):
+        return "Facebook user %s" % self.user_id
 
 
 class Driver(Document):
@@ -12,7 +26,7 @@ class Driver(Document):
     password = StringField(required=True)
     name = StringField(required=True)
     phone = StringField()
-    facebook = StringField()
+    facebook = ReferenceField(Facebook)
 
     def __unicode__(self):
         return "%s" % self.name
