@@ -104,24 +104,32 @@ def login():
 
 @app.route('/authorize_facebook')
 def fb_auth():
-    logger.debug('got here!')
-    logger.debug(request.values)
-
     code = request.values['code']
     app_id = CONFIG['app-id']
     app_secret = CONFIG['app-secret']
-    redirect = url_for('fb_auth')
+    redirecturi = CONFIG['url'] + url_for('fb_auth')
 
     url = "https://graph.facebook.com/oauth/access_token?"
     url += "client_id=%s&redirect_uri=%s&client_secret=%s&code=%s"
 
-    request_url = url % (app_id, redirect, app_secret, code)
-    logger.debug(request_url)
+    request_url = url % (app_id, redirecturi, app_secret, code)
 
     r = requests.get(request_url)
-    logger.debug(r)
+    logger.debug(r.text)
+
+    if r.status_code != requests.codes.ok:
+        return str(r.status_code) + r.text
+
+    values = {}
+    for elem in r.text.split("&"):
+        key, value = elem.split("=")
+        values[key] = value
+
+    logger.debug(values)
 
     flash((CSS_SUCC, "FB auth good"))
+
+    logger.debug(redirect)
 
     return redirect(url_for('home'))
 
