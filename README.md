@@ -9,5 +9,5 @@ This is a Flask application with a MongoDB database.
 Requirements
 ------------
 
-`mongoengine`
-sass compiler for CSS
+* `mongoengine`
+* sass compiler for CSS
