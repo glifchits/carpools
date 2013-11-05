@@ -6,8 +6,7 @@ effectively.
 
 This is a Flask application with a MongoDB database.
 
-Requirements
-------------
+#### Requirements
 
-* `mongoengine`
+* `pip install mongoengine`
 * sass compiler for CSS
