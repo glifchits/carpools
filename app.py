@@ -12,11 +12,14 @@ import os
 import re
 import json
 from geopy.geocoders import GoogleV3
+import requests
 
 from schema import *
 
 CSS_ERR = 'error'
 CSS_SUCC = 'success'
+
+from config import CONFIG
 
 
 ''' Flask app setup '''
@@ -97,6 +100,30 @@ def login():
 
     else: # request.method == 'GET'
         return render_template('login.html')
+
+
+@app.route('/authorize_facebook')
+def fb_auth():
+    logger.debug('got here!')
+    logger.debug(request.values)
+
+    code = request.values['code']
+    app_id = CONFIG['app-id']
+    app_secret = CONFIG['app-secret']
+    redirect = url_for('fb_auth')
+
+    url = "https://graph.facebook.com/oauth/access_token?"
+    url += "client_id=%s&redirect_uri=%s&client_secret=%s&code=%s"
+
+    request_url = url % (app_id, redirect, app_secret, code)
+    logger.debug(request_url)
+
+    r = requests.get(request_url)
+    logger.debug(r)
+
+    flash((CSS_SUCC, "FB auth good"))
+
+    return redirect(url_for('home'))
 
 
 @app.route('/logout')
