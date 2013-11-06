@@ -23,8 +23,9 @@ class Facebook(Document):
 class Driver(Document):
     '''A registered user who can sign up to be a driver'''
     email = EmailField(required=True, unique=True)
-    password = StringField(required=True)
     name = StringField(required=True)
+    # password is not required if they have Facebook credentials
+    password = StringField()
     phone = StringField()
     facebook = ReferenceField(Facebook)
 
