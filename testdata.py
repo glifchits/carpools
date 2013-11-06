@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 import random
+import urllib
+import json
 
 from mongoengine import *
 from schema import *
@@ -29,24 +31,42 @@ EMAILS = set([
     "gmail.com", "hotmail.com", "yahoo.com", "mail.ru"
 ])
 
-for i in range(40):
+for i in range(20):
     name = random.choice(list(NAMES))
     email = name.lower() + '%s@' + random.choice(list(EMAILS))
     password = 'password'
     email_salt = ''
 
-    added = False
-    while not added:
-        try:
-            driver = Driver(
-                name = name,
-                email = email % email_salt,
-                password = password
-            ).save()
-            added = True
-        except NotUniqueError:
-            email_salt = str(random.randint(0,99))
+    found = False
+    while not found:
+        fb_id = random.randint(1000, 50000)
+        res = urllib.urlopen('http://graph.facebook.com/%s' % fb_id).read()
+        res = json.loads(res)
+        found = 'error' not in res.keys()
 
+    found = False
+    while not found:
+        email_salt = random.randint(0, 100)
+        found = Driver.objects(email = email % email_salt).count() == 0
+
+
+    facebook = Facebook(
+        user_id = fb_id,
+        access_token = "1z2x3c4v5b6n7m",
+        expires_at = int(time.time())
+    ).save()
+    print "created %s" % facebook
+    driver = Driver(
+        name = name,
+        email = email % email_salt,
+        password = password,
+        facebook = facebook
+    ).save()
+    print "created %s" % driver
+
+print """
+Creating rides
+"""
 
 for i in range(100):
     dep = random.choice(list(CITIES))
@@ -69,5 +89,6 @@ for i in range(100):
         people = random.randint(2,6)
     )
     ride.save()
+    print "created %s" % ride
 
 
