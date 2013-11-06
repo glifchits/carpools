@@ -6,6 +6,10 @@
 {% endblock %}
 
 {% block content %}
+<div class=center>
+  <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000/fb_login">Facebook</a>
+</div>
+
 <form id=login action=/login method=POST>
   <input name=email type=text placeholder="Email address" tabindex=1>
   <input name=password type=password placeholder="Password" tabindex=2>
@@ -15,7 +19,6 @@
 </form>
 
 <div class=center>
-  <a href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000/fb_login">Facebook</a>
   <a class='register button' href=/register tabindex=4>Register to be a driver</a>
 </div>
 
