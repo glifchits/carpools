@@ -8,15 +8,23 @@
 {% block content %}
 <h2>Register as a new driver</h2>
 
-<form id=register action=/register method=POST>
-  <input name=name type=text placeholder="Your name" tabindex=1>
-  <input name=email type=text placeholder="Email address" tabindex=2>
-  <input name=password type=password placeholder="Password" tabindex=3>
-  <input name=confirm-password type=password placeholder="Confirm password" tabindex=4>
-  <div class=center>
-    <button type=submit tabindex=5>Register</button>
+<div id=register>
+  <div class=facebook>
+  <a href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000/fb_register">Register with Facebook</a>
   </div>
-</form>
+
+  <div class=manual>
+    <form id=register-form action=/register method=POST>
+      <input name=name type=text placeholder="Your name" tabindex=1>
+      <input name=email type=text placeholder="Email address" tabindex=2>
+      <input name=password type=password placeholder="Password" tabindex=3>
+      <input name=confirm-password type=password placeholder="Confirm password" tabindex=4>
+      <div class=center>
+        <button type=submit tabindex=5>Register</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 {% endblock %}
 

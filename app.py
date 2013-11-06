@@ -101,47 +101,74 @@ def login():
     else: # request.method == 'GET'
         return render_template('login.html')
 
-
-@app.route('/authorize_facebook')
-def fb_auth():
+@app.route('/fb_register')
+def fb_register():
+    '''Facebook register: authentication and profile creation'''
     code = request.values['code']
+    redirecturi = CONFIG['url'] + url_for('fb_register')
+    values = facebook_auth(code, redirecturi)
+
+
+
+@app.route('/fb_login')
+def fb_login():
+    '''Facebook login flow'''
+    # this redirect URI is called and the request contains a `code`
+    code = request.values['code']
+    redirecturi = CONFIG['url'] + url_for('fb_login')
+
+    # `values` are what we need
+    values = facebook_auth(code, redirecturi)
+
+    # and so on: create an authentication record for the right user ID
+    fb = Facebook.objects(user_id = values['user_id'])
+    if fb.count() == 0:
+        fb = Facebook()
+        fb.user_id = values['user_id']
+    else:
+        fb = fb[0]
+    fb.access_token = values['access_token']
+    fb.expires_at = values['expires_at']
+
+    fb.save()
+
+    flash((CSS_SUCC, "FB auth good"))
+    return redirect(url_for('home'))
+
+
+def facebook_auth(code, redirect_uri):
+    '''Generalized FB authentication flow. Returns an access token and its
+    debug values'''
     app_id = CONFIG['app-id']
     app_secret = CONFIG['app-secret']
-    redirecturi = CONFIG['url'] + url_for('fb_auth')
 
+    # `code` is used to retrieve an access token
     url = "https://graph.facebook.com/oauth/access_token?"
     url += "client_id=%s&redirect_uri=%s&client_secret=%s&code=%s"
-    request_url = url % (app_id, redirecturi, app_secret, code)
+    request_url = url % (app_id, redirect_uri, app_secret, code)
     r = requests.get(request_url)
 
     if r.status_code != requests.codes.ok:
         return str(r.status_code) + " " + r.text
-    values = {}
+
+    # this is just parsing the request parameters for its fields
+    request_values = {}
     for elem in r.text.split("&"):
         key, value = elem.split("=")
-        values[key] = value
-    access_token = values['access_token']
-    input_token = access_token
+        request_values[key] = value
+    access_token = request_values['access_token']
 
+    # STEP 3: call the access token debug endpoint to get the user ID
     url = "https://graph.facebook.com/debug_token?input_token=%s&access_token=%s"
-    request_url = url % (input_token, access_token)
+    request_url = url % (access_token, access_token)
     r = requests.get(request_url)
 
     if r.status_code != requests.codes.ok:
         return str(r.status_code) + " " + r.text
 
     values = r.json()['data']
-    logger.debug(values)
-
-    fb = Facebook(
-        access_token = access_token,
-        user_id = values['user_id'],
-        expires_at = values['expires_at'],
-    )
-    fb.save()
-
-    flash((CSS_SUCC, "FB auth good"))
-    return redirect(url_for('home'))
+    values['access_token'] = access_token
+    return values
 
 
 @app.route('/logout')

@@ -9,7 +9,7 @@ import time
 
 class Facebook(Document):
     '''Facebook connect credentials'''
-    user_id = IntField(required=True)
+    user_id = IntField(required=True, unique=True)
     access_token = StringField(required=True)
     expires_at = IntField(required=True)
 
