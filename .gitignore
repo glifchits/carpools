@@ -1,3 +1,4 @@
 *.pyc
 *.css
 *cache
+/env
