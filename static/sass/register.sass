@@ -1,10 +1,20 @@
 @import variables
 
-#register
-  button
-    background-color: $turq
-    border: 3px solid $darkturq
+div.facebook
+  a.button
+    background-color: $blue
+    border: 3px solid $darkblue
     color: white
     &:hover, &:focus
-      background-color: $darkturq
+      background-color: $darkblue
+
+#register div.facebook, #register div.manual
+  text-align: center
+
+button
+  background-color: $turq
+  border: 3px solid $darkturq
+  color: white
+  &:hover, &:focus
+    background-color: $darkturq
 
