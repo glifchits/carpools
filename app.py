@@ -13,6 +13,7 @@ import re
 import json
 from geopy.geocoders import GoogleV3
 import requests
+import urllib
 
 from schema import *
 
@@ -102,6 +103,16 @@ def login():
         return render_template('login.html')
 
 
+def graph(endpoint, access_token):
+    '''Makes a Facebook Graph API request, returns its JSON'''
+    url_base = 'https://graph.facebook.com/'
+    req = requests.get(
+        url_base + endpoint + '?' +
+        urllib.urlencode(dict(access_token = access_token))
+    )
+    return req.json()
+
+
 @app.route('/fb_register')
 def fb_register():
     '''Facebook register: authentication and profile creation'''
@@ -109,8 +120,24 @@ def fb_register():
     redirecturi = CONFIG['url'] + url_for('fb_register')
     values = facebook_auth(code, redirecturi)
 
-    access_token = values['access_token']
-    return access_token
+    req = graph('me', values[ 'access_token' ])
+
+    driver = Driver(
+        email = req['email'],
+        name = req['name'],
+        facebook = values['fb_object_id']
+    )
+
+    try:
+        driver.save()
+    except:
+        raise
+
+    session['user'] = json.loads(driver.to_json())
+    logger.debug(driver)
+
+    flash((CSS_SUCC, "Success!"))
+    return redirect(url_for('register'))
 
 
 @app.route('/fb_login')
@@ -123,24 +150,9 @@ def fb_login():
     # `values` are what we need
     values = facebook_auth(code, redirecturi)
 
-    # and so on: create an authentication record for the right user ID
-    fb = Facebook.objects(user_id = values['user_id'])
-    if fb.count() == 0:
-        fb = Facebook()
-        fb.user_id = values['user_id']
-    else:
-        fb = fb[0]
-    fb.access_token = values['access_token']
-    fb.expires_at = values['expires_at']
-    fb_object_id = fb.id
-    try:
-        fb.save()
-    except:
-        raise
-
     logger.debug('got user ID %s' % values['user_id'])
 
-    drivers = Driver.objects(facebook = fb_object_id)
+    drivers = Driver.objects(facebook = values['fb_object_id'])
     if drivers.count() != 1:
         return "400 failed"
 
@@ -180,6 +192,23 @@ def facebook_auth(code, redirect_uri):
 
     values = r.json()['data']
     values['access_token'] = access_token
+
+    # and so on: create an authentication record for the right user ID
+    fb = Facebook.objects(user_id = values['user_id'])
+    if fb.count() == 0:
+        fb = Facebook()
+        fb.user_id = values['user_id']
+    else:
+        fb = fb[0]
+    fb.access_token = values['access_token']
+    fb.expires_at = values['expires_at']
+    fb_object_id = fb.id
+    try:
+        fb.save()
+    except:
+        raise
+
+    values['fb_object_id'] = fb.id
     return values
 
 
