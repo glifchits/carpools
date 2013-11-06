@@ -155,7 +155,10 @@ def fb_login():
 
     drivers = Driver.objects(facebook = values['fb_object_id'])
     logger.debug("drivers are: " + str( drivers ))
-    if drivers.count() != 1:
+    if drivers.count() == 0:
+        flash((CSS_ERR, "Your Facebook account has not registered"))
+        return redirect(url_for('home'))
+    elif drivers.count() != 1:
         return "400 failed"
 
     session['user'] = json.loads(drivers[0].to_json())
