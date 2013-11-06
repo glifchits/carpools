@@ -101,6 +101,7 @@ def login():
     else: # request.method == 'GET'
         return render_template('login.html')
 
+
 @app.route('/fb_register')
 def fb_register():
     '''Facebook register: authentication and profile creation'''
@@ -108,6 +109,8 @@ def fb_register():
     redirecturi = CONFIG['url'] + url_for('fb_register')
     values = facebook_auth(code, redirecturi)
 
+    access_token = values['access_token']
+    return access_token
 
 
 @app.route('/fb_login')
@@ -129,10 +132,19 @@ def fb_login():
         fb = fb[0]
     fb.access_token = values['access_token']
     fb.expires_at = values['expires_at']
+    fb_object_id = fb.id
+    try:
+        fb.save()
+    except:
+        raise
 
-    fb.save()
+    logger.debug('got user ID %s' % values['user_id'])
 
-    flash((CSS_SUCC, "FB auth good"))
+    drivers = Driver.objects(facebook = fb_object_id)
+    if drivers.count() != 1:
+        return "400 failed"
+
+    session['user'] = json.loads(drivers[0].to_json())
     return redirect(url_for('home'))
 
 
