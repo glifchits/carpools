@@ -149,10 +149,12 @@ def fb_login():
 
     # `values` are what we need
     values = facebook_auth(code, redirecturi)
+    logger.debug("values is: " + str( values ) )
 
     logger.debug('got user ID %s' % values['user_id'])
 
     drivers = Driver.objects(facebook = values['fb_object_id'])
+    logger.debug("drivers are: " + str( drivers ))
     if drivers.count() != 1:
         return "400 failed"
 
