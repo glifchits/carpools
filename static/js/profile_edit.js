@@ -43,6 +43,40 @@ var changeToSpans = function() {
     });
 };
 
+var createLinks = function() {
+    console.debug("creating links for linkable info");
+    $('span[id^=profile]').each(function() {
+        var type = this.id.substring(8, 20);
+        if (type === 'email')
+            elem += 'mailto:';
+        else if (type === 'phone')
+            elem += 'tel:';
+        else if (type == 'facebook')
+            elem += 'http://';
+        else
+            return;
+
+        var elem = '<a href="';
+        elem += this.textContent;
+        elem += '">' + this.textContent + '</a>';
+        console.debug(this.innerHTML);
+        console.debug(elem);
+        this.innerHTML = elem;
+    })
+};
+
+var removeLinks = function() {
+    $('span[id^=profile]').each(function() {
+        if (this.childNodes.length != 1)
+            return;
+        var child = this.childNodes[0];
+        if (child.tagName !== 'A')
+            return;
+        this.textContent = child.textContent;
+    })
+};
+
+
 
 $('#edit-button').click(function() {
     var profile = $('#profile');
@@ -50,6 +84,7 @@ $('#edit-button').click(function() {
     if (!(profile.hasClass('edit-mode'))) {
         // edits allowed
         console.log('edit clicked');
+        removeLinks();
         profile.addClass('edit-mode');
         $('#edit-button').text('Save').addClass('save-button');
         changeToInputs();
@@ -65,6 +100,10 @@ $('#edit-button').click(function() {
         profile.removeClass('edit-mode');
         $('#edit-button').text('Edit').removeClass('save-button');
         changeToSpans();
+        createLinks();
     }
 });
 
+$(function() {
+    createLinks();
+});
