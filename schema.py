@@ -12,6 +12,8 @@ class Facebook(Document):
     user_id = IntField(required=True, unique=True)
     access_token = StringField(required=True)
     expires_at = IntField(required=True)
+    username = StringField()
+    link = StringField()
 
     def is_expired(self):
         return int(time.time()) >= self.expires_at
@@ -28,6 +30,7 @@ class Driver(Document):
     password = StringField()
     phone = StringField()
     facebook = ReferenceField(Facebook, unique=True)
+    picture_url = FileField()
 
     def __unicode__(self):
         return "%s" % self.name
