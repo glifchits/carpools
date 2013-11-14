@@ -121,6 +121,7 @@ def fb_register():
     values = facebook_auth(code, redirecturi)
 
     req = graph('me', values[ 'access_token' ])
+    logger.debug(req)
 
     driver = Driver(
         email = req['email'],
@@ -128,10 +129,40 @@ def fb_register():
         facebook = values['fb_object_id']
     )
 
+    fb = Facebook.objects(id = values['fb_object_id'])
+    if fb.count() != 1:
+        pass
+    else:
+        fb = fb[0]
+        user_id = req['id']
+        fb.username = req.get('username','')
+        fb.link = req.get('link', '')
+
+        img_url = 'http://graph.facebook.com/%s/picture?width=300&height=300'
+        image_request = requests.get(img_url % user_id, stream=True)
+        if image_request.status_code == 200:
+            image_path = 'temp/profile_temp.jpg'
+            image = open(image_path, 'wb')
+            for chunk in image_request.iter_content():
+                image.write(chunk)
+            image.close()
+            image = open(image_path, 'r')
+            driver.picture_url.put(image, content_type='image/jpeg')
+            image.close()
+        else:
+            logger.error("image request failed %s" % image_request.status_code)
     try:
         driver.save()
+        fb.save()
     except:
         raise
+
+    try:
+        driver.save()
+    except Exception as e:
+        flash((CSS_ERR, """That Facebook account is already linked to a user on
+this site!"""))
+        return redirect(url_for('login'))
 
     session['user'] = json.loads(driver.to_json())
     logger.debug(driver)
@@ -198,6 +229,8 @@ def facebook_auth(code, redirect_uri):
     values = r.json()['data']
     values['access_token'] = access_token
 
+    logger.debug(values)
+
     # and so on: create an authentication record for the right user ID
     fb = Facebook.objects(user_id = values['user_id'])
     if fb.count() == 0:
@@ -207,7 +240,7 @@ def facebook_auth(code, redirect_uri):
         fb = fb[0]
     fb.access_token = values['access_token']
     fb.expires_at = values['expires_at']
-    fb_object_id = fb.id
+    fb.username = values.get('username', '')
     try:
         fb.save()
     except:
