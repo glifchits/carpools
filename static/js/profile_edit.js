@@ -47,6 +47,8 @@ var createLinks = function() {
     console.debug("creating links for linkable info");
     $('span[id^=profile]').each(function() {
         var type = this.id.substring(8, 20);
+        var elem = '<a href="';
+        console.debug('link type is', type);
         if (type === 'email')
             elem += 'mailto:';
         else if (type === 'phone')
@@ -56,7 +58,6 @@ var createLinks = function() {
         else
             return;
 
-        var elem = '<a href="';
         elem += this.textContent;
         elem += '">' + this.textContent + '</a>';
         console.debug(this.innerHTML);
