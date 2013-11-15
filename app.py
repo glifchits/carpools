@@ -30,6 +30,11 @@ from config import CONFIG
 ''' Flask app setup '''
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+''' blueprints '''
+from app.search import search
+app.register_blueprint(search)
+
 assets = Environment(app)
 assets.init_app(app)
 
@@ -299,73 +304,6 @@ def register():
         return render_template('register.html')
 
 
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    if request.method == 'POST':
-        try: # no parameters
-            if not request.form['departure'] and not request.form['destination']:
-                flash((CSS_ERR, "No search parameters provided"))
-                return redirect(url_for('home'))
-            # parameters
-            dep  = request.form['departure']
-            dest = request.form['destination']
-        except KeyError as e:
-            flash((CSS_ERR, "Malformed request: %s" % e.message))
-            return redirect(url_for('home'))
-
-        matches, arriving, departing = search_rides(dep, dest)
-        matches = [ride for ride in matches]
-        arriving = [ride for ride in arriving]
-        departing = [ride for ride in departing]
-
-        all_results = matches + arriving + departing
-        for ride in all_results:
-            grab_photo(ride.driver)
-        logger.debug(all_results)
-
-        return render_template(
-            'show_results.html',
-            destination = dest,
-            departure   = dep,
-            matches     = matches,
-            arriving    = arriving,
-            departing   = departing,
-            absolutely_nothing = (not matches and not arriving and not departing)
-        )
-    return redirect(url_for('home'))
-
-
-def search_rides(departure, destination):
-    ''' This function does the DB search '''
-    dep = re.compile("^%s$" % departure, re.IGNORECASE)
-    des = re.compile("^%s$" % destination, re.IGNORECASE)
-    srt = "+depart_date"
-    matches = Ride.objects(
-        destination = des,
-        departure = dep,
-        depart_date__gte = datetime.now()
-    ).order_by(srt)
-    if matches.count() == 0:
-        logger.info("No matches found")
-        arriving = Ride.objects(
-            destination = des,
-            depart_date__gte = datetime.now()
-        ).order_by(srt)
-        departing = Ride.objects(
-            departure = dep,
-            depart_date__gte = datetime.now()
-        ).order_by(srt)
-    else:
-        arriving, departing = [], []
-    results = (
-        matches,
-        arriving,
-        departing
-    )
-    logger.debug(results)
-    return results
-
-
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
     logger.debug("submit_location POST received")
@@ -443,34 +381,6 @@ def get_ride(ride_id):
         return render_template('show_ride.html', ride=ride[0])
 
 
-def random_hex():
-    return '%030x' % random.randrange(16**30)
-
-
-def grab_photo(user_dict):
-    salt = user_dict['id'] #random_hex()
-    image_path = 'static/hosted/profile%s.jpg' % salt
-    logger.debug("user is " + str(user_dict))
-    try:
-        open(image_path)
-        return image_path
-    except IOError:
-        pass
-
-    user = Driver.objects(id = user_dict['id'])
-    if user.count() != 1:
-        raise ValueError("somehow there are != 1 users with id %s" % \
-                user_dict['id'])
-    user = user[0]
-    if not user.photo:
-        return NO_IMAGE
-
-    image = open(image_path, 'wb')
-    image.write(user.photo.read())
-    image.close()
-    return image_path
-
-
 @app.route('/profile')
 def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
@@ -480,6 +390,7 @@ def edit_profile():
     else:
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
         return redirect(url_for('login'))
+
 
 @app.route('/profile/save_changes', methods=['POST'])
 def save_profile():
