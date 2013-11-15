@@ -52,7 +52,7 @@ Sorry, no one is arriving at {{ destination }} now!
   {% for ride in rides %}
   <div class=ride>
     {% if ride.driver.photo %}
-    {% set imgurl = '/static/hosted/profile' + ride.driver.id + '.jpg' %}
+    {% set imgurl = '/static/hosted/profile' + ride.driver.id|string + '.jpg' %}
     {% else %}
     {% set imgurl = '/static/assets/noimage.jpg' %}
     {% endif %}
