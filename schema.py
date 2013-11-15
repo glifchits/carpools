@@ -30,7 +30,7 @@ class Driver(Document):
     password = StringField()
     phone = StringField()
     facebook = ReferenceField(Facebook, unique=True)
-    picture_url = FileField()
+    photo = FileField()
 
     def __unicode__(self):
         return "%s" % self.name
