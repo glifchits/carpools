@@ -2,3 +2,5 @@
 *.css
 *cache
 /env
+static/hosted
+static/temp
