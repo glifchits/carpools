@@ -12,13 +12,7 @@
   <div id=overlay></div>
 
   <div id=picture>
-    <img src=
-    {% if session.photo_url %}
-    {{ session.photo_url }}
-    {% else %}
-    http://placehold.it/150x150>
-    {% endif %}
-    >
+    <img src='/static/hosted/profile{{ session.user.id }}.jpg'>
   </div>
 
   <div id=info>

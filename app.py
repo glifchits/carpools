@@ -432,19 +432,24 @@ def random_hex():
 
 
 def grab_photo(user_dict):
-    if 'photo_url' in session:
-        return
+    salt = user_dict['id'] #random_hex()
+    image_path = 'static/hosted/profile%s.jpg' % salt
     logger.debug("user is " + str(user_dict))
+    try:
+        open(image_path)
+        return image_path
+    except IOError:
+        pass
+
     user = Driver.objects(id = user_dict['id'])
     if user.count() != 1:
-        raise Exception
+        raise ValueError("somehow there are != 1 users with id %s" % \
+                user_dict['id'])
     user = user[0]
-    salt = random_hex()
-    image_path = 'static/hosted/profile%s.jpg' % salt
     image = open(image_path, 'wb')
     image.write(user.photo.read())
     image.close()
-    session['photo_url'] = image_path
+    return image_path
 
 
 @app.route('/profile')
@@ -452,8 +457,7 @@ def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
     if 'user' in session:
         grab_photo(session['user'])
-        return render_template('profile.html', user=session['user'], \
-                photo_url=session.get('photo_url',''))
+        return render_template('profile.html', user=session['user'])
     else:
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
         return redirect(url_for('login'))
