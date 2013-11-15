@@ -42,7 +42,14 @@
       {% if user.facebook %}
       <div id=facebook>
         <span>Facebook</span>
-        <span id=profile-facebook>facebook.com/{{ user.facebook.user_id }}</span>
+        {% if user.facebook.link %}
+        {% set facebook_link = user.facebook.link %}
+        {% elif user.facebook.user_id %}
+        {% set facebook_link = 'facebook.com/' + user.facebook.user_id %}
+        {% endif %}
+        {% if facebook_link %}
+        <span class=facebook><a href='http://{{ facebook_link }}'>profile</a></span>
+        {% endif %}
       </div>
       {% endif %}
     </div>
