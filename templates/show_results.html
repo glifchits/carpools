@@ -51,7 +51,12 @@ Sorry, no one is arriving at {{ destination }} now!
 <div class=rides-grouping>
   {% for ride in rides %}
   <div class=ride>
-    <div class=pic></div>
+    {% if ride.driver.photo %}
+    {% set imgurl = '/static/hosted/profile' + ride.driver.id + '.jpg' %}
+    {% else %}
+    {% set imgurl = '/static/assets/noimage.jpg' %}
+    {% endif %}
+    <img class=pic src={{ imgurl }}>
     <div class=ride-info>
       <span class=time>Departing at {{ ride.depart_date|datetime }}</span>
       <span class=name><a href="/profile/{{ ride.driver.id }}">{{ ride.driver }}</a></span>
