@@ -309,6 +309,15 @@ def search():
             return redirect(url_for('home'))
 
         matches, arriving, departing = search_rides(dep, dest)
+        matches = [ride for ride in matches]
+        arriving = [ride for ride in arriving]
+        departing = [ride for ride in departing]
+
+        all_results = matches + arriving + departing
+        for ride in all_results:
+            grab_photo(ride.driver)
+        logger.debug(all_results)
+
         return render_template(
             'show_results.html',
             destination = dest,
