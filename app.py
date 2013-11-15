@@ -18,6 +18,8 @@ import urllib
 
 from schema import *
 
+from utils import *
+
 CSS_ERR = 'error'
 CSS_SUCC = 'success'
 
@@ -92,7 +94,7 @@ def login():
             return render_template('login.html')
         if match[0].password == password:
             # the line below was a lot nicer before OSX Mavericks.
-            session['user'] = json.loads(match[0].to_json())
+            session['user'] = jsonify(match[0])
             logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('driver'))
         else:
@@ -165,7 +167,7 @@ def fb_register():
 this site!"""))
         return redirect(url_for('login'))
 
-    session['user'] = json.loads(driver.to_json())
+    session['user'] = jsonify(driver)
     logger.debug(driver)
 
     flash((CSS_SUCC, "Success!"))
@@ -193,7 +195,7 @@ def fb_login():
     elif drivers.count() != 1:
         return "400 failed"
 
-    session['user'] = json.loads(drivers[0].to_json())
+    session['user'] = jsonify(drivers[0])
     return redirect(url_for('home'))
 
 
@@ -432,8 +434,8 @@ def random_hex():
 def grab_photo(user_dict):
     if 'photo_url' in session:
         return
-    user = Driver.objects(id = user_dict['_id']['$oid'])
-    logger.debug("user is " + str(user))
+    logger.debug("user is " + str(user_dict))
+    user = Driver.objects(id = user_dict['id'])
     if user.count() != 1:
         raise Exception
     user = user[0]
