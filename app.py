@@ -37,6 +37,11 @@ if DEBUG:
     app.debug = True
     assets.debug = True
 
+if not os.path.exists('static/hosted'):
+    os.mkdir('static/hosted')
+if not os.path.exists('static/temp'):
+    os.mkdir('static/temp')
+
 
 ''' MongoDB setup '''
 from mongoengine import *
