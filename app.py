@@ -22,6 +22,7 @@ from utils import *
 
 CSS_ERR = 'error'
 CSS_SUCC = 'success'
+NO_IMAGE = '/static/assets/noimage.jpg'
 
 from config import CONFIG
 
@@ -446,6 +447,9 @@ def grab_photo(user_dict):
         raise ValueError("somehow there are != 1 users with id %s" % \
                 user_dict['id'])
     user = user[0]
+    if not user.photo:
+        return NO_IMAGE
+
     image = open(image_path, 'wb')
     image.write(user.photo.read())
     image.close()
