@@ -16,15 +16,10 @@ from geopy.geocoders import GoogleV3
 import requests
 import urllib
 
-from schema import *
-
-from utils import *
 
 CSS_ERR = 'error'
 CSS_SUCC = 'success'
 NO_IMAGE = '/static/assets/noimage.jpg'
-
-from config import CONFIG
 
 
 ''' Flask app setup '''
@@ -34,6 +29,8 @@ app.secret_key = os.urandom(24)
 ''' blueprints '''
 from app.search import search
 app.register_blueprint(search)
+from app.profile import profile
+app.register_blueprint(profile)
 
 assets = Environment(app)
 assets.init_app(app)
@@ -379,56 +376,6 @@ def get_ride(ride_id):
         return redirect(url_for('home'))
     else:
         return render_template('show_ride.html', ride=ride[0])
-
-
-@app.route('/profile')
-def edit_profile():
-    ''' Allow someone to view and edit their own profile. '''
-    if 'user' in session:
-        grab_photo(session['user'])
-        return render_template('profile.html', user=session['user'])
-    else:
-        flash((CSS_ERR, "You have to be logged in to view your profile!"))
-        return redirect(url_for('login'))
-
-
-@app.route('/profile/save_changes', methods=['POST'])
-def save_profile():
-    ''' Accepts a save profile POST request. '''
-    form = request.form
-    logger.debug(form)
-    attribs = {
-        'name': 'profile-name',
-        'facebook': 'profile-facebook',
-        'phone': 'profile-phone',
-        'email': 'profile-email'
-    }
-    if 'user' in session:
-        user = session['user']
-        logger.debug('modifying' + str(user))
-
-    for attr in attribs.keys():
-        user[attr] = form[attribs[attr]]
-
-    return '200'
-
-
-@app.route('/profile/<user_id>')
-def view_profile(user_id):
-    ''' Renders an individual user profile. '''
-    match = Driver.objects(id = user_id)
-    try:
-        assert match
-    except AssertionError:
-        flash((CSS_ERR, "Invalid profile ID"))
-        return redirect(url_for('home'))
-    logger.debug(match)
-    if match.count() != 1:
-        flash((CSS_ERR, "No user with that profile ID was found."))
-        return redirect(url_for('home'))
-    grab_photo(match[0])
-    return render_template('profile.html', user=match[0])
-
 
 
 if __name__ == '__main__':
