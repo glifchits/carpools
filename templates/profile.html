@@ -12,7 +12,11 @@
   <div id=overlay></div>
 
   <div id=picture>
-    <img src='/static/hosted/profile{{ session.user.id }}.jpg'>
+    {% if '(no file)' in user.photo|string %}
+    <img src='/static/assets/noimage.jpg'>
+    {% else %}
+    <img src='/static/hosted/profile{{ user.id }}.jpg'>
+    {% endif %}
   </div>
 
   <div id=info>
@@ -39,7 +43,7 @@
         {% if user.facebook.link %}
         {% set facebook_link = user.facebook.link %}
         {% elif user.facebook.user_id %}
-        {% set facebook_link = 'facebook.com/' + user.facebook.user_id %}
+        {% set facebook_link = 'facebook.com/' + user.facebook.user_id|string %}
         {% endif %}
         {% if facebook_link %}
         <span class=facebook><a href='http://{{ facebook_link }}'>profile</a></span>
