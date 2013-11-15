@@ -12,7 +12,13 @@
   <div id=overlay></div>
 
   <div id=picture>
-    <img src=http://placehold.it/150x150>
+    <img src=
+    {% if session.photo_url %}
+    {{ session.photo_url }}
+    {% else %}
+    http://placehold.it/150x150>
+    {% endif %}
+    >
   </div>
 
   <div id=info>
@@ -36,7 +42,7 @@
       {% if user.facebook %}
       <div id=facebook>
         <span>Facebook</span>
-        <span id=profile-facebook>facebook.com/{{ user.facebook }}</span>
+        <span id=profile-facebook>facebook.com/{{ user.facebook.user_id }}</span>
       </div>
       {% endif %}
     </div>
