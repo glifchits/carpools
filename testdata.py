@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import random
 import urllib
 import json
+import requests
 
 from mongoengine import *
 from schema import *
@@ -49,19 +50,31 @@ for i in range(20):
         email_salt = random.randint(0, 100)
         found = Driver.objects(email = email % email_salt).count() == 0
 
-
     facebook = Facebook(
         user_id = fb_id,
         access_token = "1z2x3c4v5b6n7m",
         expires_at = int(time.time())
     ).save()
     print "created %s" % facebook
+
     driver = Driver(
         name = name,
         email = email % email_salt,
         password = password,
         facebook = facebook
-    ).save()
+    )
+    img_url = 'http://graph.facebook.com/%s/picture?width=300&height=300'
+    image_request = requests.get(img_url % fb_id, stream=True)
+    if image_request.status_code == 200:
+        image_path = 'static/temp/profile_temp.jpg'
+        image = open(image_path, 'wb')
+        for chunk in image_request.iter_content():
+            image.write(chunk)
+        image.close()
+        image = open(image_path, 'r')
+        driver.photo.put(image, content_type='image/jpeg')
+        image.close()
+    driver.save()
     print "created %s" % driver
 
 print """
