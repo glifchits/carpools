@@ -394,12 +394,13 @@ def add_ride():
         return redirect(url_for('add_ride'))
 
     ride = Ride(
-        driver      = driver,
+        driver      = driver['id'],
         departure   = departure,
         destination = destination,
         people      = people,
         depart_date = depart_date
     )
+
     try:
         ride.save()
         flash((CSS_SUCC, "Your ride was added successfully!"))
