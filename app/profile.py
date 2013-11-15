@@ -4,10 +4,10 @@ from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
 
-profile = Blueprint('profile', __name__)
+profile = Blueprint('profile', __name__, url_prefix='/profile')
 
 
-@profile.route('/profile')
+@profile.route('/')
 def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
     if 'user' in session:
@@ -18,7 +18,7 @@ def edit_profile():
         return redirect(url_for('login'))
 
 
-@profile.route('/profile/save_changes', methods=['POST'])
+@profile.route('/save_changes', methods=['POST'])
 def save_profile():
     ''' Accepts a save profile POST request. '''
     form = request.form
@@ -39,7 +39,7 @@ def save_profile():
     return '200'
 
 
-@profile.route('/profile/<user_id>')
+@profile.route('/<user_id>')
 def view_profile(user_id):
     ''' Renders an individual user profile. '''
     match = Driver.objects(id = user_id)
