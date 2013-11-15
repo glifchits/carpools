@@ -1,5 +1,5 @@
 *.pyc
-*.css
+static/css/*
 *cache
 /env
 static/hosted/*
