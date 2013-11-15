@@ -10,6 +10,7 @@ from flask.ext.assets import Environment, Bundle
 from datetime import datetime, timedelta
 import os
 import re
+import random
 import json
 from geopy.geocoders import GoogleV3
 import requests
@@ -141,13 +142,13 @@ def fb_register():
         img_url = 'http://graph.facebook.com/%s/picture?width=300&height=300'
         image_request = requests.get(img_url % user_id, stream=True)
         if image_request.status_code == 200:
-            image_path = 'temp/profile_temp.jpg'
+            image_path = 'static/temp/profile_temp.jpg'
             image = open(image_path, 'wb')
             for chunk in image_request.iter_content():
                 image.write(chunk)
             image.close()
             image = open(image_path, 'r')
-            driver.picture_url.put(image, content_type='image/jpeg')
+            driver.photo.put(image, content_type='image/jpeg')
             image.close()
         else:
             logger.error("image request failed %s" % image_request.status_code)
@@ -424,11 +425,33 @@ def get_ride(ride_id):
         return render_template('show_ride.html', ride=ride[0])
 
 
+def random_hex():
+    return '%030x' % random.randrange(16**30)
+
+
+def grab_photo(user_dict):
+    if 'photo_url' in session:
+        return
+    user = Driver.objects(id = user_dict['_id']['$oid'])
+    logger.debug("user is " + str(user))
+    if user.count() != 1:
+        raise Exception
+    user = user[0]
+    salt = random_hex()
+    image_path = 'static/hosted/profile%s.jpg' % salt
+    image = open(image_path, 'wb')
+    image.write(user.photo.read())
+    image.close()
+    session['photo_url'] = image_path
+
+
 @app.route('/profile')
 def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
     if 'user' in session:
-        return render_template('profile.html', user=session['user'])
+        grab_photo(session['user'])
+        return render_template('profile.html', user=session['user'], \
+                photo_url=session.get('photo_url',''))
     else:
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
         return redirect(url_for('login'))
@@ -467,6 +490,7 @@ def view_profile(user_id):
     if match.count() != 1:
         flash((CSS_ERR, "No user with that profile ID was found."))
         return redirect(url_for('home'))
+    grab_photo(match[0])
     return render_template('profile.html', user=match[0])
 
 
