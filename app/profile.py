@@ -12,7 +12,6 @@ profile = Blueprint('profile', __name__, url_prefix='/profile')
 def edit_profile():
     ''' Allow someone to view and edit their own profile. '''
     if 'user' in session:
-        grab_photo(session['user'])
         return render_template('profile.html', user=session['user'])
     else:
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
@@ -53,7 +52,6 @@ def view_profile(user_id):
     if match.count() != 1:
         flash((CSS_ERR, "No user with that profile ID was found."))
         return redirect(url_for('home'))
-    grab_photo(match[0])
     return render_template('profile.html', user=match[0])
 
 
