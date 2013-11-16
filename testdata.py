@@ -5,7 +5,7 @@ import json
 import requests
 
 from mongoengine import *
-from schema import *
+from app.schema import *
 
 connect('carpools')
 
