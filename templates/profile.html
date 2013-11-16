@@ -43,10 +43,10 @@
         {% if user.facebook.link %}
         {% set facebook_link = user.facebook.link %}
         {% elif user.facebook.user_id %}
-        {% set facebook_link = 'facebook.com/' + user.facebook.user_id|string %}
+        {% set facebook_link = 'https://facebook.com/' + user.facebook.user_id|string %}
         {% endif %}
         {% if facebook_link %}
-        <span class=facebook><a href='http://{{ facebook_link }}'>profile</a></span>
+        <span class=facebook><a href='{{ facebook_link }}'>profile</a></span>
         {% endif %}
       </div>
       {% endif %}
