@@ -7,14 +7,8 @@ from flask.ext.mongoengine import MongoEngine
 from flask.ext.assets import Environment, Bundle
 
 ''' other libraries '''
-from datetime import datetime, timedelta
 import os
-import re
-import random
-import json
 from geopy.geocoders import GoogleV3
-import requests
-import urllib
 
 from app.constants import *
 
