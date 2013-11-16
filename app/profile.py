@@ -3,6 +3,7 @@ from flask import render_template, request, url_for, redirect, flash, session
 from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
+from constants import *
 
 profile = Blueprint('profile', __name__, url_prefix='/profile')
 
@@ -15,7 +16,7 @@ def edit_profile():
         return render_template('profile.html', user=session['user'])
     else:
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
-        return redirect(url_for('login'))
+        return redirect(url_for('login.login_user'))
 
 
 @profile.route('/save_changes', methods=['POST'])
