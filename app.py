@@ -31,6 +31,8 @@ from app.login import login
 app.register_blueprint(login)
 from app.register import register
 app.register_blueprint(register)
+from app.photos import photos
+app.register_blueprint(photos)
 
 assets = Environment(app)
 assets.init_app(app)
@@ -81,7 +83,7 @@ def home():
 def driver():
     if 'user' not in session:
         flash((CSS_ERR, "You must be logged in to create a ride!"))
-        return redirect(url_for('login'))
+        return redirect(url_for('login.login_user'))
     return render_template('driver.html')
 
 @app.route('/logout')
@@ -107,7 +109,7 @@ def add_ride():
         driver = session['user']
     except:
         flash((CSS_ERR, "Not logged in"))
-        return redirect(url_for('login'))
+        return redirect(url_for('login.login_user'))
 
     try:
         departure   = form['departure']
