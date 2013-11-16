@@ -11,7 +11,7 @@ rides = Blueprint('rides', __name__, url_prefix='/rides')
 
 
 @rides.route('/<ride_id>')
-def get_ride(ride_id):
+def view(ride_id):
     try:
         ride = Ride.objects(id=ride_id)
         assert ride
@@ -30,7 +30,7 @@ def get_ride(ride_id):
 
 
 @rides.route('/create', methods=['GET', 'POST'])
-def create_ride():
+def create():
     if request.method == 'GET':
         if 'user' not in session:
             flash((CSS_ERR, "You must be logged in to create a ride!"))
