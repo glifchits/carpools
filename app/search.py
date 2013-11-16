@@ -3,6 +3,8 @@ from flask import render_template, request, url_for, redirect, flash, session
 from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
+from constants import *
+
 from datetime import datetime
 import re
 
@@ -29,8 +31,6 @@ def search_results():
         departing = [ride for ride in departing]
 
         all_results = matches + arriving + departing
-        for ride in all_results:
-            grab_photo(ride.driver)
         app.logger.debug(all_results)
 
         return render_template(
