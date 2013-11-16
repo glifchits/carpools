@@ -1,5 +1,6 @@
 
 from flask import current_app as app
+import requests
 
 def random_hex():
     return '%030x' % random.randrange(16**30)
@@ -47,9 +48,15 @@ def jsonify(obj):
     return d
 
 
+def graph(endpoint, access_token):
+    '''Makes a Facebook Graph API request, returns its JSON'''
+    url_base = 'https://graph.facebook.com/'
+    req = requests.get(
+        url_base + endpoint + '?' +
+        urllib.urlencode(dict(access_token = access_token))
+    )
+    return req.json()
+
+
 if __name__ == '__main__':
-    from schema import *
-    connect('carpools')
-    driver = Driver.objects.first()
-    from pprint import pprint
-    pprint(  jsonify(driver) )
+    pass
