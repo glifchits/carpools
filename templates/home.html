@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-<form id=ride-search action=/search method=POST>
+<form id=ride-search action='{{ url_for('search.search_results') }}' method=POST>
   <input name=departure type=text placeholder='Where are you leaving from?' tabindex=1>
   <input name=destination type=text placeholder='Where are you headed?' tabindex=2>
   <div class=center>
