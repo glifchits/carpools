@@ -16,11 +16,7 @@ from geopy.geocoders import GoogleV3
 import requests
 import urllib
 
-
-CSS_ERR = 'error'
-CSS_SUCC = 'success'
-NO_IMAGE = '/static/assets/noimage.jpg'
-
+from app.constants import *
 
 ''' Flask app setup '''
 app = Flask(__name__)
@@ -31,6 +27,8 @@ from app.search import search
 app.register_blueprint(search)
 from app.profile import profile
 app.register_blueprint(profile)
+from app.login import login
+app.register_blueprint(login)
 
 assets = Environment(app)
 assets.init_app(app)
