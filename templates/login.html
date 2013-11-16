@@ -10,7 +10,7 @@
   <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000{{ url_for('login.facebook_login') }}">Facebook</a>
 </div>
 
-<form id=login action=/login method=POST>
+<form id=login action='{{ url_for('login.login_user') }}' method=POST>
   <input name=email type=text placeholder="Email address" tabindex=1>
   <input name=password type=password placeholder="Password" tabindex=2>
   <div class=center>
@@ -19,7 +19,7 @@
 </form>
 
 <div class=center>
-  <a class='register button' href=/register tabindex=4>Register to be a driver</a>
+  <a class='register button' href='{{ url_for('register.register_user') }}' tabindex=4>Register to be a driver</a>
 </div>
 
 {% endblock %}
