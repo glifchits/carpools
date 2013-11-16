@@ -4,12 +4,13 @@ from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
 from config import CONFIG
+from constants import *
 
 login = Blueprint('login', __name__, url_prefix = '/login')
 
 
 @login.route('/', methods=['GET', 'POST'])
-def login():
+def login_user():
     if request.method == 'POST':
         try:
             email    = request.form['email']
@@ -42,11 +43,17 @@ def facebook_login():
     '''Facebook login flow'''
     # this redirect URI is called and the request contains a `code`
     code = request.values['code']
-    redirecturi = CONFIG['url'] + url_for('facebook_login')
+    redirecturi = CONFIG['url'] + url_for('.facebook_login')
 
     # `values` are what we need
     values = facebook_auth(code, redirecturi)
-    app.logger.debug("values is: " + str( values ) )
+    app.logger.debug("values is: " + str(values))
+    if values['status'] != 200:
+        err = values['error']
+        flash((CSS_ERR, err['type'] + ": " + err['message']))
+        return redirect(url_for('.login_user'))
+
+
     app.logger.debug('got user ID %s' % values['user_id'])
 
     drivers = Driver.objects(facebook = values['fb_object_id'])
@@ -64,6 +71,12 @@ def facebook_login():
 def facebook_auth(code, redirect_uri):
     '''Generalized FB authentication flow. Returns an access token and its
     debug values'''
+
+    def request_return(request):
+        j = request.json()
+        j[u'status'] = request.status_code
+        return j
+
     app_id = CONFIG['app-id']
     app_secret = CONFIG['app-secret']
 
@@ -74,7 +87,7 @@ def facebook_auth(code, redirect_uri):
     r = requests.get(request_url)
 
     if r.status_code != requests.codes.ok:
-        return str(r.status_code) + " " + r.text
+        return request_return(r)
 
     # this is just parsing the request parameters for its fields
     request_values = {}
@@ -89,12 +102,13 @@ def facebook_auth(code, redirect_uri):
     r = requests.get(request_url)
 
     if r.status_code != requests.codes.ok:
-        return str(r.status_code) + " " + r.text
+        return request_return(r)
 
-    values = r.json()['data']
+    values = request_return(r)['data']
+    values[u'status'] = r.status_code
     values['access_token'] = access_token
 
-    logger.debug(values)
+    app.logger.debug(values)
 
     # and so on: create an authentication record for the right user ID
     fb = Facebook.objects(user_id = values['user_id'])
