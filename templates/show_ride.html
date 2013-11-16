@@ -14,7 +14,7 @@
     <span>{{ ride.destination }}</span>
   </div>
   <div id=driver>
-    <span>{{ ride.driver }}</span> is driving
+    <span><a href='{{ url_for('profile.view', user_id = ride.driver.id|string) }}'>{{ ride.driver }}</a></span> is driving
   </div>
   <div id=info>
     Departs at <span class="departure-time">{{ ride.depart_date|datetime }}</span><br/>
