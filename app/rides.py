@@ -29,8 +29,17 @@ def get_ride(ride_id):
         return render_template('show_ride.html', ride=ride[0])
 
 
-@rides.route('/submit', methods=['POST'])
-def add_ride():
+@rides.route('/create', methods=['GET', 'POST'])
+def create_ride():
+    if request.method == 'GET':
+        if 'user' not in session:
+            flash((CSS_ERR, "You must be logged in to create a ride!"))
+            return redirect(url_for('login.login_user'))
+        return render_template('driver.html')
+
+    if request.method != 'POST':
+        return
+
     form = request.form
     app.logger.debug(form)
     try:
