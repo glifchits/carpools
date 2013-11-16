@@ -10,11 +10,11 @@
 
 <div id=register>
   <div class=facebook>
-    <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000/fb_register">Register with Facebook</a>
+    <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000{{ url_for('register.facebook_register') }}">Register with Facebook</a>
   </div>
 
   <div class=manual>
-    <form id=register-form action=/register method=POST>
+    <form id=register-form action='{{ url_for('register.register_user') }}' method=POST>
       <input name=name type=text placeholder="Your name" tabindex=1>
       <input name=email type=text placeholder="Email address" tabindex=2>
       <input name=password type=password placeholder="Password" tabindex=3>
