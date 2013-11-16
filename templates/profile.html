@@ -12,11 +12,7 @@
   <div id=overlay></div>
 
   <div id=picture>
-    {% if '(no file)' in user.photo|string %}
-    <img src='/static/assets/noimage.jpg'>
-    {% else %}
-    <img src='/static/hosted/profile{{ user.id }}.jpg'>
-    {% endif %}
+    <img src='{{ url_for('photos.get_photo', user_id = user.id) }}'>
   </div>
 
   <div id=info>
