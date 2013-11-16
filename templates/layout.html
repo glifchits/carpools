@@ -19,7 +19,7 @@
       <header>
       <div class=logged-in>
         {% if 'user' in session %}
-        <span>Hi, <a href='{{ url_for('profile.edit_profile') }}'>{{ session.user.name }}</a></span> <a href='{{ url_for('logout') }}' class=logout>Log out</a>
+        <span>Hi, <a href='{{ url_for('profile.edit') }}'>{{ session.user.name }}</a></span> <a href='{{ url_for('logout') }}' class=logout>Log out</a>
         {% else %}
         <a href='{{ url_for('login.login_user') }}' class=login>Login</a>
         {% endif %}
