@@ -81,13 +81,6 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/driver')
-def driver():
-    if 'user' not in session:
-        flash((CSS_ERR, "You must be logged in to create a ride!"))
-        return redirect(url_for('login.login_user'))
-    return render_template('driver.html')
-
 @app.route('/logout')
 def logout():
     session.clear()
