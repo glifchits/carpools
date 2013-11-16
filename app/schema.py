@@ -29,7 +29,7 @@ class Driver(Document):
     # password is not required if they have Facebook credentials
     password = StringField()
     phone = StringField()
-    facebook = ReferenceField(Facebook, unique=True)
+    facebook = ReferenceField(Facebook) #unique=True, required=False)
     photo = FileField()
 
     def __unicode__(self):

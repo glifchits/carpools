@@ -1,6 +1,8 @@
 
 from flask import render_template, request, url_for, redirect, flash, session
 from flask import Blueprint, current_app as app
+import mongoengine.errors
+
 from schema import *
 from utils import *
 from config import CONFIG
@@ -32,6 +34,9 @@ def register_user():
         )
         try:
             driver.save()
+        except mongoengine.errors.ValidationError as e:
+            flash((CSS_ERR, e.message))
+            return redirect(url_for('.register_user'))
         except Exception as e:
             app.logger.debug(type(e))
             flash((CSS_ERR, "A user with that email already exists."))
