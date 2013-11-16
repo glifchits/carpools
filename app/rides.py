@@ -5,6 +5,8 @@ from schema import *
 from utils import *
 from constants import *
 
+from datetime import datetime
+
 rides = Blueprint('rides', __name__, url_prefix='/rides')
 
 
@@ -14,7 +16,7 @@ def get_ride(ride_id):
         ride = Ride.objects(id=ride_id)
         assert ride
     except AssertionError:
-        logger.debug('caught bad ride id')
+        app.logger.debug('caught bad ride id')
         flash((CSS_ERR, "Invalid ride ID"))
         return redirect(url_for('home'))
     if len(ride) > 1:
@@ -30,7 +32,7 @@ def get_ride(ride_id):
 @rides.route('/submit', methods=['POST'])
 def add_ride():
     form = request.form
-    logger.debug(form)
+    app.logger.debug(form)
     try:
         driver = session['user']
     except:
