@@ -9,7 +9,7 @@ profile = Blueprint('profile', __name__, url_prefix='/profile')
 
 
 @profile.route('/')
-def edit_profile():
+def edit():
     ''' Allow someone to view and edit their own profile. '''
     if 'user' in session:
         return render_template('profile.html', user=session['user'])
@@ -19,7 +19,7 @@ def edit_profile():
 
 
 @profile.route('/save_changes', methods=['POST'])
-def save_profile():
+def save():
     ''' Accepts a save profile POST request. '''
     form = request.form
     app.logger.debug(form)
@@ -40,7 +40,7 @@ def save_profile():
 
 
 @profile.route('/<user_id>')
-def view_profile(user_id):
+def view(user_id):
     ''' Renders an individual user profile. '''
     match = Driver.objects(id = user_id)
     try:
