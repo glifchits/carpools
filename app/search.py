@@ -12,7 +12,7 @@ search = Blueprint('search', __name__)
 
 
 @search.route('/search', methods=['GET', 'POST'])
-def search_results():
+def results():
     if request.method == 'POST':
         try: # no parameters
             if not request.form['departure'] and not request.form['destination']:
