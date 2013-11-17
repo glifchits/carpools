@@ -110,10 +110,6 @@ def get_browser_location():
 
 
 if __name__ == '__main__':
-    import sys
-    try:
-        port = int(sys.argv[1])
-    except:
-        port = 5000
+    port = int(os.environ.get('PORT', 5000))
     print "running app"
     app.run(port = port, use_reloader = False)
