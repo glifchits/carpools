@@ -91,4 +91,9 @@ def get_browser_location():
 
 
 if __name__ == '__main__':
-    app.run()
+    import sys
+    try:
+        port = int(sys.argv[1])
+    except:
+        port = 5000
+    app.run(port = port)
