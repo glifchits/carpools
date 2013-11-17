@@ -18,9 +18,11 @@
   <div id=info>
     <div id=profile-header>
       <span id=profile-name>{{ user.name }}</span>
+      {#
       {% if 'user' in session and session.user.email == user.email %}
       <a id=edit-button href=#>Edit</a>
       {% endif %}
+      #}
     </div>
     <div id=contact>
       <div id=email>
@@ -34,7 +36,7 @@
       </div>
       {% endif %}
       {% if user.facebook %}
-      <div id=facebook>
+      <div id=facebook class={{ 'disabled' if not user.facebook }}>
         <span>Facebook</span>
         {% if user.facebook.link %}
         {% set facebook_link = user.facebook.link %}
@@ -43,15 +45,13 @@
         {% endif %}
         {% if facebook_link %}
         <span class=facebook><a href='{{ facebook_link }}'>profile</a></span>
+        {% else %}
+        {# <a href=# class=add-field></a> #}
         {% endif %}
       </div>
       {% endif %}
-      <div class=center>
-        <a href="#" id="add-field">+</a>
-      </div>
     </div>
   </div>
-
 </div>
 
 <script type=text/javascript src='/static/js/profile_edit.js'></script>

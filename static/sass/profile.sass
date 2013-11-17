@@ -15,7 +15,6 @@
 span[id^=profile], input[id^=profile]
   font-size: 16px
   height: 30px
-  line-height: 30px
   margin: 0
   padding: 0
   border: none
@@ -90,11 +89,13 @@ input
       div
         display: table
         width: 100%
-        span:first-child
-          display: table-cell
-          margin-right: 15px
-          color: $grey
-          width: 6em
+        span
+          line-height: 30px
+          &:first-child
+            display: table-cell
+            margin-right: 15px
+            color: $grey
+            width: 6em
         input
           /* these are the inputs in the contact section */
           display: table-cell
