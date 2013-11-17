@@ -10,11 +10,18 @@
   *
     box-sizing: border-box
 
+#content
+  display: table
+  width: 100%
+
 #info, #contact
   display: table-cell
   vertical-align: top
+
 #info
   border: none
+  width: 60%
+
 #contact
   width: 40%
   height: 100%
@@ -30,6 +37,10 @@
     resize: none
     &:focus
       outline: none
+  #send-message.disabled
+    cursor: default
+    color: $grey
+    border-color: $grey
 
 #header
   font-size: 30px
