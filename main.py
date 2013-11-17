@@ -29,6 +29,8 @@ from app.photos import photos
 app.register_blueprint(photos)
 from app.rides import rides
 app.register_blueprint(rides)
+from app.email import email
+app.register_blueprint(email)
 
 assets = Environment(app)
 assets.init_app(app)
@@ -88,33 +90,6 @@ def get_browser_location():
     lng = request.values.get('lng')
     session.location = (lat, lng)
     return "success"
-
-
-@app.route('/email', methods=['POST'])
-def send_email():
-    logger.debug(request.values)
-
-    sender = request.values.get('from')
-    recipient = request.values.get('to')
-    subject = request.values.get('subject')
-    message = request.values.get('message')
-
-    import smtplib
-    from app.config import CONFIG
-    smtpserver = 'smtp.gmail.com:587'
-    header  = "From: %s\n" % sender
-    header += "To: %s\n" % recipient
-    header += "Cc: \n"
-    header += "Subject: %s\n\n" % subject
-    message = header + message
-
-    server = smtplib.SMTP(smtpserver)
-    server.starttls()
-    server.login(CONFIG['email-login'], CONFIG['email-pass'])
-    problems = server.sendmail(sender, recipient, message)
-    server.quit()
-    logger.debug('problems: ' + str(problems))
-    return '404'
 
 
 if __name__ == '__main__':
