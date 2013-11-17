@@ -90,6 +90,18 @@ def get_browser_location():
     return "success"
 
 
+@app.route('/email', methods=['POST'])
+def send_email():
+    logger.debug(request.values)
+
+    sender = request.values.get('from')
+    recipient = request.values.get('to')
+    subject = request.values.get('subject')
+    message = request.values.get('message')
+
+    return '404'
+
+
 if __name__ == '__main__':
     import sys
     try:
