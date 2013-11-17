@@ -87,6 +87,8 @@ $('#edit-button').click(function() {
         console.log('edit clicked');
         removeLinks();
         profile.addClass('edit-mode');
+
+        $('#add-field').show();
         $('#edit-button').text('Save').addClass('save-button');
         changeToInputs();
     } else {
@@ -98,6 +100,7 @@ $('#edit-button').click(function() {
         $.post('/profile/save_changes', fieldsOnSave);
 
         /* restore page to non-edit mode */
+        $('#add-field').hide();
         profile.removeClass('edit-mode');
         $('#edit-button').text('Edit').removeClass('save-button');
         changeToSpans();
@@ -106,5 +109,6 @@ $('#edit-button').click(function() {
 });
 
 $(function() {
+    $('#add-field').hide();
     createLinks();
 });
