@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>Carpools{% block title %}{% endblock %}</title>
+    <title>Sharecar{% block title %}{% endblock %}</title>
     <link rel="shortcut icon" type="image/x-icon" href="/static/assets/favicon.ico">
     <link href='/static/css/normalize.css' rel=stylesheet type=text/css>
     <link href='/static/css/layout.css' rel=stylesheet type=text/css>
@@ -21,7 +21,7 @@
         <a href='{{ url_for('login.login_user') }}' class=login>Login</a>
         {% endif %}
       </div>
-      <a id=wordmark href='/'><h1>Carpools</h1></a>
+      <a id=wordmark href='/'><h1>Sharecar</h1></a>
       </header>
       <div class=content>
         {% with messages = get_flashed_messages() %}
