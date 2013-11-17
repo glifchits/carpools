@@ -6,7 +6,6 @@ print "Hello Heroku logs"
 from flask import Flask
 from flask import render_template, request, url_for, redirect, flash, session
 from flask.ext.mongoengine import MongoEngine
-from flask.ext.assets import Environment, Bundle
 
 print "Done flask imports"
 
@@ -38,12 +37,8 @@ app.register_blueprint(photos)
 from app.rides import rides
 app.register_blueprint(rides)
 
-assets = Environment(app)
-assets.init_app(app)
-
 if DEBUG:
     app.debug = True
-    assets.debug = True
 
 print "mkdirs"
 
@@ -67,11 +62,6 @@ db = MongoEngine(app)
 
 print "and the rest"
 
-''' Asset bundles '''
-css = Bundle('css/style.css', 'css/home.css', 'css/show_results.css', \
-    'css/show_ride.css', 'css/normalize.css')
-assets.register('css', css)
-
 ''' Other extensions '''
 # jinja template loop controls. allows {% continue %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -85,6 +75,8 @@ def format_datetime(value, format='%I:%M %p on %a, %b %d'):
     return value.strftime(format)
 
 app.jinja_env.filters['datetime'] = format_datetime
+
+print 'done with preamble'
 
 ''' App controllers '''
 
