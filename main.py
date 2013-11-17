@@ -99,6 +99,21 @@ def send_email():
     subject = request.values.get('subject')
     message = request.values.get('message')
 
+    import smtplib
+    from app.config import CONFIG
+    smtpserver = 'smtp.gmail.com:587'
+    header  = "From: %s\n" % sender
+    header += "To: %s\n" % recipient
+    header += "Cc: \n"
+    header += "Subject: %s\n\n" % subject
+    message = header + message
+
+    server = smtplib.SMTP(smtpserver)
+    server.starttls()
+    server.login(CONFIG['email-login'], CONFIG['email-pass'])
+    problems = server.sendmail(sender, recipient, message)
+    server.quit()
+    logger.debug('problems: ' + str(problems))
     return '404'
 
 
