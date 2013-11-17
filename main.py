@@ -80,18 +80,19 @@ print 'done with preamble'
 
 ''' App controllers '''
 
+print 'routing home'
 @app.route('/')
 def home():
     session.debug = DEBUG
     return render_template('home.html')
 
-
+print 'routing logout'
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
-
+print 'routing submit location'
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
     logger.debug("submit_location POST received")
@@ -100,7 +101,7 @@ def get_browser_location():
     session.location = (lat, lng)
     return "success"
 
-
+print 'starting run'
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print "running app"
