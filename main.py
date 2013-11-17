@@ -5,6 +5,7 @@ from flask import Flask
 from flask import render_template, request, url_for, redirect, flash, session
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.assets import Environment, Bundle
+from flask.ext.mail import Mail, Message
 
 ''' other libraries '''
 import os
@@ -29,8 +30,23 @@ from app.photos import photos
 app.register_blueprint(photos)
 from app.rides import rides
 app.register_blueprint(rides)
+'''
 from app.email import email
 app.register_blueprint(email)
+'''
+
+from app.config import CONFIG
+''' Mail setup '''
+from app.schema import Ride
+app.config.update({
+    'MAIL_SERVER': 'smtp.gmail.com',
+    'MAIL_PORT': 465,
+    'MAIL_USE_SSL': True,
+    'MAIL_USERNAME': CONFIG['email-login'],
+    'MAIL_PASSWORD': CONFIG['email-pass'],
+    'DEFAULT_MAIL_SENDER': CONFIG['email-login']
+})
+mail = Mail(app)
 
 assets = Environment(app)
 assets.init_app(app)
@@ -90,6 +106,30 @@ def get_browser_location():
     lng = request.values.get('lng')
     session.location = (lat, lng)
     return "success"
+
+
+@app.route('/email/<ride_id>', methods=['POST'])
+def send_email(ride_id):
+    app.logger.debug(ride_id)
+    app.logger.debug(request.values)
+
+    sender = request.values.get('from')
+    recipient = request.values.get('to')
+    subject = request.values.get('subject')
+    message = request.values.get('message')
+
+    sender = session['user']['email']
+    ride = Ride.objects(id = ride_id).first()
+    recipient = ride.driver.email
+
+    app.logger.debug("sender: " + str(sender))
+    app.logger.debug("recipient: " + str(recipient))
+
+    msg = Message(subject, recipients = [recipient], body = message,
+            sender = sender)
+
+    mail.send(msg)
+    return 'success'
 
 
 if __name__ == '__main__':
