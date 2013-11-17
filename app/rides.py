@@ -60,7 +60,7 @@ def create():
 
     if '' in [departure, destination, date, time, people]:
         flash((CSS_ERR, 'You should fill out every value in the form!'))
-        return redirect(url_for('driver'))
+        return redirect(url_for('rides.create'))
 
     try:
         datestr = date + " " + time
@@ -68,7 +68,7 @@ def create():
         depart_date = datetime.strptime(datestr, fmt)
     except ValueError as e:
         flash((CSS_ERR, 'The entered date was invalid (%s)' % e.message))
-        return redirect(url_for('add_ride'))
+        return redirect(url_for('rides.create'))
 
     ride = Ride(
         driver      = driver['id'],

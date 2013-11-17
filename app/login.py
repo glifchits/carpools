@@ -28,7 +28,7 @@ def login_user():
             # the line below was a lot nicer before OSX Mavericks.
             session['user'] = jsonify(match[0])
             app.logger.info('user logged in: %s' % session['user'])
-            return redirect(url_for('driver'))
+            return redirect(url_for('rides.create'))
         else:
             app.logger.debug("Incorrect password")
             flash((CSS_ERR, "Incorrect password"))

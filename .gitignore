@@ -1,3 +1,5 @@
+prod/
+
 *.pyc
 *cache
 /env
