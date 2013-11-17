@@ -8,18 +8,31 @@
 
 {% block content %}
 
-<div id=ride>
-  <div id=location>
-    <span>{{ ride.departure }}</span> to
-    <span>{{ ride.destination }}</span>
-  </div>
+<div id=header>
+  <span>{{ ride.departure }}</span> to
+  <span>{{ ride.destination }}</span>
+</div>
+<div id=info>
   <div id=driver>
     <span><a href='{{ url_for('profile.view', user_id = ride.driver.id|string) }}'>{{ ride.driver }}</a></span> is driving
   </div>
-  <div id=info>
+  <div>
     Departs at <span class="departure-time">{{ ride.depart_date|datetime }}</span><br/>
     There are <span>{{ ride.people }}</span> spots in the vehicle
   </div>
 </div>
+<div id=contact>
+  <textarea id=message placeholder='Send {{ ride.driver }} a message'></textarea>
+  <a id=send-message href='#' class=min-button>Send</a>
 
+  {% if ride.driver.phone %}
+  <span>Call {{ ride.driver }} at <a href='tel:{{ ride.driver.phone }}'>{{ ride.driver.phone }}</span>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block beforeclose %}
+<script src='/static/js/jquery.autosize-min.js'></script>
+<script>$('textarea').autosize();</script>
 {% endblock %}
