@@ -1,4 +1,4 @@
-DEBUG = False
+DEBUG = True
 
 ''' Flask+extension imports '''
 from flask import Flask
@@ -46,7 +46,7 @@ if not os.path.exists('static/temp'):
 ''' MongoDB setup '''
 from mongoengine import *
 app.config['MONGODB_SETTINGS'] = {
-    'DB': 'carpools',
+    'DB': 'app19550831',
     'USERNAME': 'heroku',
     'PASSWORD': 'cf68822c49b79afb7d70fa17002264fd',
     'HOST': 'paulo.mongohq.com',
