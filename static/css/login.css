@@ -1,0 +1,13 @@
+#login button {
+  background-color: #2ecc71;
+  border: 3px solid #27ae60;
+  color: white; }
+  #login button:hover, #login button:focus {
+    background-color: #27ae60; }
+
+a.register {
+  background-color: #1abc9c;
+  border: 3px solid #16a085;
+  color: white; }
+  a.register:hover, a.register:focus {
+    background-color: #16a085; }

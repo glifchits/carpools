@@ -1,0 +1,35 @@
+.rides-count {
+  display: block;
+  color: #7f8c8d;
+  margin-bottom: 10px; }
+  .rides-count:not(:first-child) {
+    margin-top: 20px; }
+
+.ride {
+  width: 100%;
+  display: inline-block;
+  padding: 10px 0;
+  line-height: 25px;
+  color: #34495e; }
+  .ride span {
+    color: black; }
+  .ride:not(:last-child) {
+    border-bottom: 1px solid #bdc3c7; }
+  .ride .pic {
+    width: 50px;
+    height: 50px;
+    background: grey;
+    border-radius: 25px;
+    float: left;
+    display: block;
+    margin-right: 10px; }
+  .ride .time {
+    color: #95a5a6;
+    width: 100%;
+    display: block; }
+  .ride .name {
+    color: #3498db; }
+  .ride .book-it {
+    float: right; }
+    .ride .book-it a {
+      text-decoration: none; }

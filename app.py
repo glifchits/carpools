@@ -1,4 +1,4 @@
-DEBUG = True
+DEBUG = False
 
 ''' Flask+extension imports '''
 from flask import Flask
