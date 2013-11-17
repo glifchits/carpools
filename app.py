@@ -116,4 +116,4 @@ if __name__ == '__main__':
     except:
         port = 5000
     print "running app"
-    app.run(port = port)
+    app.run(port = port, use_reloader = False)
