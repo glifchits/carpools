@@ -1,10 +1,14 @@
 DEBUG = True
 
+print "Hello Heroku logs"
+
 ''' Flask+extension imports '''
 from flask import Flask
 from flask import render_template, request, url_for, redirect, flash, session
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.assets import Environment, Bundle
+
+print "Done flask imports"
 
 ''' other libraries '''
 import os
@@ -12,9 +16,13 @@ from geopy.geocoders import GoogleV3
 
 from app.constants import *
 
+print "Starting Flask setup"
+
 ''' Flask app setup '''
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+print "adding blueprints"
 
 ''' blueprints '''
 from app.search import search
@@ -37,11 +45,14 @@ if DEBUG:
     app.debug = True
     assets.debug = True
 
+print "mkdirs"
+
 if not os.path.exists('static/hosted'):
     os.mkdir('static/hosted')
 if not os.path.exists('static/temp'):
     os.mkdir('static/temp')
 
+print "start mongodb setup"
 
 ''' MongoDB setup '''
 from mongoengine import *
@@ -53,6 +64,8 @@ app.config['MONGODB_SETTINGS'] = {
     'PORT': 10068
 }
 db = MongoEngine(app)
+
+print "and the rest"
 
 ''' Asset bundles '''
 css = Bundle('css/style.css', 'css/home.css', 'css/show_results.css', \
@@ -102,4 +115,5 @@ if __name__ == '__main__':
         port = int(sys.argv[1])
     except:
         port = 5000
+    print "running app"
     app.run(port = port)
