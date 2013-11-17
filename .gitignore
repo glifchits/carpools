@@ -1,3 +1,5 @@
+prod/
+
 *.pyc
 static/css/*
 app/config.py
