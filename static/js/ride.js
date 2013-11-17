@@ -1,13 +1,13 @@
 var sendEmail = function() {
     console.log('sending email');
     var params = {
-        'from'      : 'fromaddr',
-        'to'        : 'toaddr',
         'subject'   : 'subject',
         'message'   : 'message'
     };
+    var path = window.location.pathname.split('/');
+    var ride_id = path[path.length - 1];
     console.log(params);
-    $.post('/email', params);
+    $.post('/email/' + ride_id, params);
 };
 
 // show send button only when the textarea is non empty
