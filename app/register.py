@@ -28,11 +28,10 @@ def register_user():
             flash((CSS_ERR, "Password did not match confirmation"))
             return redirect(url_for('.register_user'))
 
-        driver = Driver(
-            email    = email,
-            name     = name,
-            password = password
-        )
+        driver = Driver()
+        driver.email = email
+        driver.name = name
+        driver.set_password(password)
         try:
             driver.save()
         except mongoengine.errors.ValidationError as e:
@@ -60,11 +59,10 @@ def facebook_register():
     req = graph('me', values[ 'access_token' ])
     app.logger.debug(req)
 
-    driver = Driver(
-        email = req['email'],
-        name = req['name'],
-        facebook = values['fb_object_id']
-    )
+    driver = Driver()
+    driver.email = req['email']
+    driver.name = req['name']
+    driver.facebook = values['fb_object_id']
 
     fb = Facebook.objects(id = values['fb_object_id'])
     if fb.count() != 1:

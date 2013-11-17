@@ -24,8 +24,7 @@ def login_user():
             app.logger.debug("0 or >= 2 matches found")
             flash((CSS_ERR, "Your email address or password was incorrect."))
             return render_template('login.html')
-        if match[0].password == password:
-            # the line below was a lot nicer before OSX Mavericks.
+        if match[0].check_password(password):
             session['user'] = jsonify(match[0])
             app.logger.info('user logged in: %s' % session['user'])
             return redirect(url_for('rides.create'))
