@@ -7,7 +7,17 @@ var sendEmail = function() {
     var path = window.location.pathname.split('/');
     var ride_id = path[path.length - 1];
     console.log(params);
-    $.post('/email/' + ride_id, params);
+    $.ajax({
+        type: 'POST', 
+        url: '/email/' + ride_id, 
+        data: params, 
+        success: function(data) {
+            console.log('email sent');
+        },
+        error: function(data) {
+            console.log("failed to send");
+        }
+    });
 };
 
 // show send button only when the textarea is non empty
