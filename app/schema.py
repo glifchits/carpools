@@ -4,6 +4,7 @@ This contains the schemas for `carpools`
 '''
 
 from mongoengine import *
+from werkzeug.security import generate_password_hash, check_password_hash
 import time
 
 
@@ -26,11 +27,16 @@ class Driver(Document):
     '''A registered user who can sign up to be a driver'''
     email = EmailField(required=True, unique=True)
     name = StringField(required=True)
-    # password is not required if they have Facebook credentials
     password = StringField()
     phone = StringField()
     facebook = ReferenceField(Facebook) #unique=True, required=False)
     photo = FileField()
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, hashed):
+        return check_password_hash(self.password, hashed)
 
     def __unicode__(self):
         return "%s" % self.name
