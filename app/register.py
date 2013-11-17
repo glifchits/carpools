@@ -7,6 +7,7 @@ from schema import *
 from utils import *
 from config import CONFIG
 from constants import *
+from login import facebook_auth
 
 register = Blueprint('register', __name__, url_prefix = '/register')
 
@@ -98,12 +99,12 @@ def facebook_register():
     except Exception as e:
         flash((CSS_ERR, """That Facebook account is already linked to a user on
 this site!"""))
-        return redirect(url_for('login'))
+        return redirect(url_for('login.login_user'))
 
     session['user'] = jsonify(driver)
     app.logger.debug(driver)
 
     flash((CSS_SUCC, "Success!"))
-    return redirect(url_for('register'))
+    return redirect(url_for('.register_user'))
 
 
