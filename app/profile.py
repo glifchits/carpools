@@ -5,6 +5,8 @@ from schema import *
 from utils import *
 from constants import *
 
+import json
+
 profile = Blueprint('profile', __name__, url_prefix='/profile')
 
 
@@ -16,6 +18,18 @@ def edit():
     else:
         flash((CSS_ERR, "You have to be logged in to view your profile!"))
         return redirect(url_for('login.login_user'))
+
+
+@profile.route('/fields')
+def available_fields():
+    ''' Returns a JSON list of fields that are not filled out. '''
+    if 'user' in session:
+        driver = Driver.objects(id = session['user']['id']).first()
+        fields = [name for name, value in driver._fields.iteritems()]
+        fields = filter(lambda f: not driver.__getattribute__(f), fields)
+        return json.dumps(fields)
+    else:
+        return '404'
 
 
 @profile.route('/save_changes', methods=['POST'])
