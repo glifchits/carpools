@@ -1,5 +1,3 @@
-* password security
-* Facebook connect
 * local network authentication, connect
 * geolocation
   * for search result relevance
