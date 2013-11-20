@@ -2,7 +2,7 @@ var sendEmail = function() {
     console.log('sending email');
     var params = {
         'subject'   : 'subject',
-        'message'   : 'message'
+        'message'   : $('#message').val()
     };
     var path = window.location.pathname.split('/');
     var ride_id = path[path.length - 1];

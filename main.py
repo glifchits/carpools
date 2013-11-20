@@ -110,15 +110,11 @@ def get_browser_location():
 
 @app.route('/email/<ride_id>', methods=['POST'])
 def send_email(ride_id):
-    app.logger.debug(ride_id)
-    app.logger.debug(request.values)
-
-    sender = request.values.get('from')
-    recipient = request.values.get('to')
-    subject = request.values.get('subject')
     message = request.values.get('message')
 
     sender = session['user']['email']
+    subject = "You got a message from %s on Sharecar!"
+    subject = subject % session['user']['name']
     ride = Ride.objects(id = ride_id).first()
     recipient = ride.driver.email
 
