@@ -9,24 +9,25 @@ from constants import *
 login = Blueprint('login', __name__, url_prefix = '/login')
 
 
-def login_finally(request):
-    app.logger.debug('reached login_finally')
+def login_finally(next_url):
     if 'user' in session:
-        app.logger.debug('user in session hooray')
-        app.logger.debug(request.args)
-        next = request.args.get('next')
-        if not next:
-            next = url_for('home')
+        next_url = next_url or url_for('home')
         app.logger.debug('redirecting to %s' % next)
-        return redirect(next)
+        return redirect(next_url)
     return '404'
 
 
 @login.route('', methods=['GET', 'POST'])
 def login_user():
+    # this is the URL for redirect to self if login failure
+    # reattaches the redirect URL
     redirect_self = url_for('.login_user', next=request.args.get('next'))
+
     if request.method == 'POST':
-        app.logger.debug('login POST. request args is: %s' % request.args)
+        # gets the redirect URL. simultaneously removes this value from session
+        next_url = session.pop('after_login_post', None)
+
+        # this is the login logic
         try:
             email    = request.form['email']
             password = request.form['password']
@@ -42,10 +43,13 @@ def login_user():
 
         session['user'] = jsonify(match.first())
         app.logger.info('user logged in: %s' % session['user'])
-        return login_finally(request)
+        # here we pass in the next_url to allow redirect
+        return login_finally(next_url)
 
     else: # request.method == 'GET'
         app.logger.debug(request.args)
+        # put the redirect URL in session. so we can use FB login
+        session['after_login_post'] = request.args.get('next')
         return render_template('login.html')
 
 
@@ -76,7 +80,10 @@ def facebook_login():
         return "400 failed"
 
     session['user'] = jsonify(drivers[0])
-    return login_finally(request)
+
+    # get redirect URL from session as we saw in GET /login
+    next_url = session.pop('after_login_post', None)
+    return login_finally(next_url)
 
 
 def facebook_auth(code, redirect_uri):
