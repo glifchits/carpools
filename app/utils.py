@@ -16,7 +16,7 @@ def grab_photo(user_id):
     if user.count() != 1:
         raise ValueError("somehow there are != 1 users with id %s" % \
                 user_dict['id'])
-    user = user[0]
+    user = user.first()
     if not user.photo:
         return None
 

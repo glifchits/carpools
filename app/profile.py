@@ -62,7 +62,7 @@ def view(user_id):
     if match.count() != 1:
         flash((CSS_ERR, "No user with that profile ID was found."))
         return redirect(url_for('home'))
-    return render_template('profile.html', user=match[0])
+    return render_template('profile.html', user=match.first())
 
 
 
