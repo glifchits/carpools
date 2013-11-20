@@ -101,10 +101,10 @@ def logout():
 
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
-    logger.debug("submit_location POST received")
     lat = request.values.get('lat')
-    lng = request.values.get('lng')
+    lng = request.values.get('lon')
     session.location = (lat, lng)
+    logger.debug("client's location is %s" % session.location)
     return "success"
 
 
