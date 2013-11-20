@@ -4,6 +4,7 @@ from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
 from constants import *
+from components import login_required
 
 from datetime import datetime
 
@@ -11,6 +12,7 @@ rides = Blueprint('rides', __name__, url_prefix='/rides')
 
 
 @rides.route('/<ride_id>')
+@login_required
 def view(ride_id):
     try:
         ride = Ride.objects(id=ride_id)
@@ -30,23 +32,13 @@ def view(ride_id):
 
 
 @rides.route('/create', methods=['GET', 'POST'])
+@login_required
 def create():
     if request.method == 'GET':
-        if 'user' not in session:
-            flash((CSS_ERR, "You must be logged in to create a ride!"))
-            return redirect(url_for('login.login_user'))
         return render_template('driver.html')
-
-    if request.method != 'POST':
-        return
 
     form = request.form
     app.logger.debug(form)
-    try:
-        driver = session['user']
-    except:
-        flash((CSS_ERR, "Not logged in"))
-        return redirect(url_for('login.login_user'))
 
     try:
         departure   = form['departure']
@@ -71,7 +63,7 @@ def create():
         return redirect(url_for('rides.create'))
 
     ride = Ride(
-        driver      = driver['id'],
+        driver      = session['user']['id'],
         departure   = departure,
         destination = destination,
         people      = people,
