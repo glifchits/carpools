@@ -4,6 +4,7 @@ from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
 from constants import *
+from components import login_required
 
 import json
 
@@ -11,28 +12,24 @@ profile = Blueprint('profile', __name__, url_prefix='/profile')
 
 
 @profile.route('/')
+@login_required
 def edit():
     ''' Allow someone to view and edit their own profile. '''
-    if 'user' in session:
-        return render_template('profile.html', user=session['user'])
-    else:
-        flash((CSS_ERR, "You have to be logged in to view your profile!"))
-        return redirect(url_for('login.login_user'))
+    return render_template('profile.html', user=session['user'])
 
 
 @profile.route('/fields')
+@login_required
 def available_fields():
     ''' Returns a JSON list of fields that are not filled out. '''
-    if 'user' in session:
-        driver = Driver.objects(id = session['user']['id']).first()
-        fields = [name for name, value in driver._fields.iteritems()]
-        fields = filter(lambda f: not driver.__getattribute__(f), fields)
-        return json.dumps(fields)
-    else:
-        return '404'
+    driver = Driver.objects(id = session['user']['id']).first()
+    fields = [name for name, value in driver._fields.iteritems()]
+    fields = filter(lambda f: not driver.__getattribute__(f), fields)
+    return json.dumps(fields)
 
 
 @profile.route('/save_changes', methods=['POST'])
+@login_required
 def save():
     ''' Accepts a save profile POST request. '''
     form = request.form
@@ -43,9 +40,8 @@ def save():
         'phone': 'profile-phone',
         'email': 'profile-email'
     }
-    if 'user' in session:
-        user = session['user']
-        app.logger.debug('modifying' + str(user))
+    user = session['user']
+    app.logger.debug('modifying' + str(user))
 
     for attr in attribs.keys():
         user[attr] = form[attribs[attr]]
