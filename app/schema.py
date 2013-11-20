@@ -36,7 +36,9 @@ class Driver(Document):
         self.password = generate_password_hash(password)
 
     def check_password(self, hashed):
-        return check_password_hash(self.password, hashed)
+        if self.password:
+            return check_password_hash(self.password, hashed)
+        return False
 
     def __unicode__(self):
         return "%s" % self.name
