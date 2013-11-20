@@ -7,10 +7,10 @@
 
 {% block content %}
 <div class=center>
-  <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000{{ url_for('login.facebook_login') }}">Facebook</a>
+  <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000{{ url_for('login.facebook_login') }}{% if request.args.get('next') %}&next={{ request.args.get('next') }}{% endif %}">Facebook</a>
 </div>
 
-<form id=login action='{{ url_for('login.login_user') }}' method=POST>
+<form id=login action='{{ url_for('login.login_user', next=request.args.get('next')) }}' method=POST>
   <input name=email type=text placeholder="Email address" tabindex=1>
   <input name=password type=password placeholder="Password" tabindex=2>
   <div class=center>

@@ -9,30 +9,43 @@ from constants import *
 login = Blueprint('login', __name__, url_prefix = '/login')
 
 
-@login.route('/', methods=['GET', 'POST'])
+def login_finally(request):
+    app.logger.debug('reached login_finally')
+    if 'user' in session:
+        app.logger.debug('user in session hooray')
+        app.logger.debug(request.args)
+        next = request.args.get('next')
+        if not next:
+            next = url_for('home')
+        app.logger.debug('redirecting to %s' % next)
+        return redirect(next)
+    return '404'
+
+
+@login.route('', methods=['GET', 'POST'])
 def login_user():
+    redirect_self = url_for('.login_user', next=request.args.get('next'))
     if request.method == 'POST':
+        app.logger.debug('login POST. request args is: %s' % request.args)
         try:
             email    = request.form['email']
             password = request.form['password']
         except KeyError as e:
             flash((CSS_ERR, "Malformed request (%s)" % e.message))
-            return to_login
+            return redirect(redirect_self)
 
         match = Driver.objects(email = email)
-        if match.count() != 1:
-            app.logger.debug("0 or >= 2 matches found")
+        if match.count() != 1 or not match.first().check_password(password):
+            app.logger.debug("0 or >= 2 matches found or bad password")
             flash((CSS_ERR, "Your email address or password was incorrect."))
-            return render_template('login.html')
-        if match.first().check_password(password):
-            session['user'] = jsonify(match.first())
-            app.logger.info('user logged in: %s' % session['user'])
-            return redirect(url_for('rides.create'))
-        else:
-            app.logger.debug("Incorrect password")
-            flash((CSS_ERR, "Incorrect password"))
-            return render_template('login.html')
+            return redirect(redirect_self)
+
+        session['user'] = jsonify(match.first())
+        app.logger.info('user logged in: %s' % session['user'])
+        return login_finally(request)
+
     else: # request.method == 'GET'
+        app.logger.debug(request.args)
         return render_template('login.html')
 
 
@@ -63,7 +76,7 @@ def facebook_login():
         return "400 failed"
 
     session['user'] = jsonify(drivers[0])
-    return redirect(url_for('home'))
+    return login_finally(request)
 
 
 def facebook_auth(code, redirect_uri):
