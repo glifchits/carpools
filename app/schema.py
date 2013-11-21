@@ -64,3 +64,9 @@ class Ride(Document):
         return "%s, %s->%s" % (self.driver, self.departure, self.destination)
 
 
+class Location(Document)
+
+    name = StringField(required=True)
+    location = GeoPointField(required=True)
+    types = ListField()
+
