@@ -1,5 +1,5 @@
 
-from google_api_config import CONFIG
+from google_api_config import GCONFIG as CONFIG
 from geopy.geocoders import GoogleV3
 import requests
 import urllib
