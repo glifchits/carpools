@@ -1,5 +1,5 @@
 prod/
-
+**/*.zip
 *.pyc
 static/css/*
 app/config.py
