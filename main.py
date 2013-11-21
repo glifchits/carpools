@@ -9,7 +9,7 @@ from flask.ext.mail import Mail, Message
 
 ''' other libraries '''
 import os
-from geopy.geocoders import GoogleV3
+import json
 
 from app.constants import *
 
@@ -103,8 +103,8 @@ def logout():
 def get_browser_location():
     lat = request.values.get('lat')
     lng = request.values.get('lon')
-    session.location = (lat, lng)
-    logger.debug("client's location is %s" % session.location)
+    session['location'] = (lat, lng)
+    logger.debug("client's location is (%s, %s)" % (lat, lng))
     return "success"
 
 
@@ -126,6 +126,18 @@ def send_email(ride_id):
 
     mail.send(msg)
     return 'success'
+
+
+@app.route('/locations')
+def get_locations():
+    if 'location' not in session:
+        return '404'
+
+    query = request.args.get('q')
+    logger.debug(query)
+    results = ['hello', 'goodbye', 'test']
+    results = [{'value': name, 'tokens': [name]} for name in results]
+    return json.dumps(results)
 
 
 if __name__ == '__main__':
