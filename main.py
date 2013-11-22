@@ -129,11 +129,13 @@ def send_email(ride_id):
 @app.route('/locations')
 def get_locations():
     if 'location' not in session:
-        return json.dumps([])
+        lat = 43
+        lon = -80
 
     def datum(location):
         return {
-            'value' : location.name,
+            'value': location.name,
+            'name': location.name,
             'tokens' : location.name.split(' ')
         }
 
