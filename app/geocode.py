@@ -81,10 +81,10 @@ def save_locations(lat, lon):
     g = Geocoder()
     results = g.nearby_search(lat, lon)['results']
     for result in results:
-        place = Location()
-        place.name = result['name']
         loclat = float(result['geometry']['location']['lat'])
         loclon = float(result['geometry']['location']['lng'])
+        place = Location()
+        place.name = result['name']
         place.location = (loclat, loclon)
         place.vicinity = result['vicinity']
         place.g_id = result['id']
@@ -92,9 +92,10 @@ def save_locations(lat, lon):
             place.save()
             app.logger.debug('saved %s' % place)
         except Exception as e:
-            app.logger.debug("didn't save %s: %s" % (place, e))
+            pass#app.logger.debug("didn't save %s: %s" % (place, e))
 
 def get_locations(lat, lon, query=''):
-    resultset = Location.objects(location__near=[lat, lon])
+    resultset = Location.objects(location__near=[lat, lon]).no_cache()
     return resultset
+
 
