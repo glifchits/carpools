@@ -26,19 +26,13 @@
 <script type='text/javascript' src='/static/js/typeahead.js/typeahead.js'></script>
 
 <script>
-  var changeOptions = function(options) {
-    $.get('/locations', function(data) {
-      options = data;
-      });
-    };
-
-    $([$('input[name=departure]'), $('input[name=destination]')]).each(function() {
-      this.typeahead({
-        name: 'departures',
-        prefetch: 'http://localhost:5000/locations',
-        remote: 'http://localhost:5000/locations?q=%QUERY'
-        });
-      });
+  //$([$('input[name=departure]'), $('input[name=destination]')]).each(function() {
+  
+ $('input[name=departure]').typeahead([{
+    name: 'departures',
+    prefetch: 'http://localhost:5000/locations',
+    remote: 'http://localhost:5000/locations?q=%QUERY'
+  }]);
 
 </script>
 {% endblock %}
