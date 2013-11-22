@@ -129,12 +129,23 @@ def send_email(ride_id):
 @app.route('/locations')
 def get_locations():
     if 'location' not in session:
-        return '404'
+        return json.dumps([])
+
+    def datum(location):
+        return {
+            'value' : location.name,
+            'tokens' : location.name.split(' ')
+        }
 
     query = request.args.get('q')
-    app.logger.debug(query)
-    results = ['hello', 'goodbye', 'test']
-    results = [{'value': name, 'tokens': [name]} for name in results]
+
+    lat, lon = session['location']
+    locations = geocode.get_locations(lat, lon, query)
+    app.logger.debug(locations)
+
+    results = [datum(loc) for loc in locations]
+    results.reverse()
+    app.logger.debug(results)
     return json.dumps(results)
 
 
