@@ -88,9 +88,13 @@ def save_locations(lat, lon):
         place.location = (loclat, loclon)
         place.vicinity = result['vicinity']
         place.g_id = result['id']
-        app.logger.debug('saving %s' % place)
         try:
             place.save()
+            app.logger.debug('saved %s' % place)
         except Exception as e:
-            app.logger.debug("didn't save: %s" % e)
+            app.logger.debug("didn't save %s: %s" % (place, e))
+
+def get_locations(lat, lon, query=''):
+    resultset = Location.objects(location__near=[lat, lon])
+    return resultset
 
