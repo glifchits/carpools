@@ -1,5 +1,7 @@
 
-from google_api_config import GCONFIG as CONFIG
+from flask import current_app as app
+from config import GCONFIG as CONFIG
+from schema import *
 from geopy.geocoders import GoogleV3
 import requests
 import urllib
@@ -74,4 +76,21 @@ class Geocoder(object):
             return r.text
 
 
+def save_locations(lat, lon):
+    app.logger.debug('getting locations at (%s, %s)' % (lat, lon))
+    g = Geocoder()
+    results = g.nearby_search(lat, lon)['results']
+    for result in results:
+        place = Location()
+        place.name = result['name']
+        loclat = float(result['geometry']['location']['lat'])
+        loclon = float(result['geometry']['location']['lng'])
+        place.location = (loclat, loclon)
+        place.vicinity = result['vicinity']
+        place.g_id = result['id']
+        app.logger.debug('saving %s' % place)
+        try:
+            place.save()
+        except Exception as e:
+            app.logger.debug("didn't save: %s" % e)
 
