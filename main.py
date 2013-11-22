@@ -38,6 +38,7 @@ app.register_blueprint(email)
 from app.config import CONFIG
 ''' Mail setup '''
 from app.schema import Ride
+from app import geocode
 app.config.update({
     'MAIL_SERVER': 'smtp.gmail.com',
     'MAIL_PORT': 465,
@@ -75,10 +76,6 @@ assets.register('css', css)
 # jinja template loop controls. allows {% continue %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
-''' Random stuff '''
-logger = app.logger
-#geo = GoogleV3()      # see geopy
-
 
 def format_datetime(value, format='%I:%M %p on %a, %b %d'):
     return value.strftime(format)
@@ -104,7 +101,8 @@ def get_browser_location():
     lat = request.values.get('lat')
     lng = request.values.get('lon')
     session['location'] = (lat, lng)
-    logger.debug("client's location is (%s, %s)" % (lat, lng))
+    app.logger.debug("client's location is (%s, %s)" % (lat, lng))
+    geocode.save_locations(lat, lng)
     return "success"
 
 
@@ -134,7 +132,7 @@ def get_locations():
         return '404'
 
     query = request.args.get('q')
-    logger.debug(query)
+    app.logger.debug(query)
     results = ['hello', 'goodbye', 'test']
     results = [{'value': name, 'tokens': [name]} for name in results]
     return json.dumps(results)
