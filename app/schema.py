@@ -64,9 +64,15 @@ class Ride(Document):
         return "%s, %s->%s" % (self.driver, self.departure, self.destination)
 
 
-class Location(Document)
+class Location(Document):
 
     name = StringField(required=True)
-    location = GeoPointField(required=True)
+    location = GeoPointField(required=True, unique=True)
     types = ListField()
+    g_id = StringField()
+    vicinity = StringField()
+
+    def __unicode__(self):
+        return "%s @ (%s, %s)" % (self.name, self.location[0], self.location[1])
+
 
