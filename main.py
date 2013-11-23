@@ -129,8 +129,10 @@ def send_email(ride_id):
 @app.route('/locations')
 def get_locations():
     if 'location' not in session:
-        lat = 43
-        lon = -80
+        lat = 43.48
+        lon = -80.5
+    else:
+        lat, lon = session['location']
 
     def datum(location):
         return {
@@ -141,7 +143,6 @@ def get_locations():
 
     query = request.args.get('q')
 
-    lat, lon = session['location']
     locations = geocode.get_locations(lat, lon, query)
     app.logger.debug(locations)
 
