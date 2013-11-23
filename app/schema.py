@@ -69,7 +69,7 @@ class Location(Document):
     name = StringField(required=True)
     location = GeoPointField(required=True, unique=True)
     types = ListField()
-    g_id = StringField()
+    g_id = StringField(unique=True)
     vicinity = StringField()
 
     def __unicode__(self):
