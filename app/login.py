@@ -58,7 +58,9 @@ def facebook_login():
     '''Facebook login flow'''
     # this redirect URI is called and the request contains a `code`
     code = request.values['code']
+    app.logger.debug('config url is %s' % CONFIG.url)
     redirecturi = CONFIG.url + url_for('.facebook_login')
+    app.logger.debug('redirect url %s' % redirecturi)
 
     # `values` are what we need
     values = facebook_auth(code, redirecturi)
