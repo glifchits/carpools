@@ -27,6 +27,30 @@ a
   &:hover, &:focus
     color: $darkblue
 
+// twitter typeahead styles
+input[class^=tt]
+  margin-top: 20px
+  margin-bottom: 0
+span.twitter-typeahead
+  width: 100%
+span.tt-dropdown-menu
+  border-radius: 0 0 5px 5px
+  background-color: white
+  width: 100%
+  span.tt-suggestions
+    border: 1px solid $grey
+    border-top: none
+  div.tt-suggestion
+    line-height: 36px
+    padding: 0 8px
+    p
+      padding: 0
+      margin: 0
+    &.tt-is-under-cursor
+      background-color: $green
+      color: white
+
+
 input
   box-sizing: border-box
   width: 100%

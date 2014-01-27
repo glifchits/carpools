@@ -31,7 +31,6 @@ def results():
         departing = [ride for ride in departing]
 
         all_results = matches + arriving + departing
-        app.logger.debug(all_results)
 
         return render_template(
             'show_results.html',
@@ -47,32 +46,20 @@ def results():
 
 def search_rides(departure, destination):
     ''' This function does the DB search '''
-    dep = re.compile("^%s$" % departure, re.IGNORECASE)
-    des = re.compile("^%s$" % destination, re.IGNORECASE)
     srt = "+depart_date"
     matches = Ride.objects(
-        destination = des,
-        departure = dep,
-        depart_date__gte = datetime.now()
+        depart_date__gte = datetime.now(),
+        destination__in = Location.objects(name__icontains = destination),
+        departure__in   = Location.objects(name__icontains = departure)
     ).order_by(srt)
-    if matches.count() == 0:
-        app.logger.info("No matches found")
-        arriving = Ride.objects(
-            destination = des,
-            depart_date__gte = datetime.now()
-        ).order_by(srt)
-        departing = Ride.objects(
-            departure = dep,
-            depart_date__gte = datetime.now()
-        ).order_by(srt)
-    else:
-        arriving, departing = [], []
+
+    arriving, departing = [], []
     results = (
         matches,
         arriving,
         departing
     )
-    app.logger.debug(results)
+    app.logger.debug(matches)
     return results
 
 

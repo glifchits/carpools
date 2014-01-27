@@ -62,13 +62,11 @@ def create():
         flash((CSS_ERR, 'The entered date was invalid (%s)' % e.message))
         return redirect(url_for('rides.create'))
 
-    ride = Ride(
-        driver      = session['user']['id'],
-        departure   = departure,
-        destination = destination,
-        people      = people,
-        depart_date = depart_date
-    )
+    ride = Ride()
+    ride.driver = session['user']['id']
+    ride.people = people
+    ride.depart_date = depart_date
+    ride.set_places(departure, destination)
 
     try:
         ride.save()

@@ -9,7 +9,7 @@ from flask.ext.mail import Mail, Message
 
 ''' other libraries '''
 import os
-from geopy.geocoders import GoogleV3
+import json
 
 from app.constants import *
 
@@ -37,7 +37,8 @@ app.register_blueprint(email)
 
 from app.config import CONFIG
 ''' Mail setup '''
-from app.schema import Ride
+from app.schema import Ride, Location
+from app import geocode
 app.config.update({
     'MAIL_SERVER': 'smtp.gmail.com',
     'MAIL_PORT': 465,
@@ -75,10 +76,6 @@ assets.register('css', css)
 # jinja template loop controls. allows {% continue %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
-''' Random stuff '''
-logger = app.logger
-#geo = GoogleV3()      # see geopy
-
 
 def format_datetime(value, format='%I:%M %p on %a, %b %d'):
     return value.strftime(format)
@@ -101,10 +98,11 @@ def logout():
 
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
-    logger.debug("submit_location POST received")
     lat = request.values.get('lat')
-    lng = request.values.get('lng')
-    session.location = (lat, lng)
+    lng = request.values.get('lon')
+    session['location'] = (lat, lng)
+    app.logger.debug("client's location is (%s, %s)" % (lat, lng))
+    geocode.save_locations(lat, lng)
     return "success"
 
 
@@ -126,6 +124,42 @@ def send_email(ride_id):
 
     mail.send(msg)
     return 'success'
+
+
+import math
+def distance(p1, p2):
+    x1, y1 = map(float, p1)
+    x2, y2 = map(float, p2)
+    return math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 )
+
+
+@app.route('/locations')
+def get_locations():
+    if 'location' not in session:
+        # test location.
+        lat = 43.48
+        lon = -80.5
+    else:
+        lat, lon = session['location']
+
+    def datum(location):
+        return {
+            'value': location.name,
+            'name': location.name,
+            'tokens' : location.name.split(' '),
+            'distance': distance((lat, lon), location.location)
+        }
+
+    query = request.args.get('q')
+
+    locations = Location.objects(
+        location__near = (lat, lon),
+        name__istartswith = query
+    )
+    app.logger.debug(locations)
+
+    results = [datum(loc) for loc in locations]
+    return json.dumps(results, indent=4)
 
 
 if __name__ == '__main__':

@@ -7,6 +7,13 @@ from mongoengine import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import time
 
+try:
+    from flask import current_app as app
+    logger = app.logger
+except RuntimeError:
+    import logging
+    logger = logging.getLogger(__name__)
+
 
 class Facebook(Document):
     '''Facebook connect credentials'''
@@ -21,6 +28,18 @@ class Facebook(Document):
 
     def __unicode__(self):
         return "Facebook user %s" % self.user_id
+
+
+class Location(Document):
+
+    name = StringField(required=True)
+    location = GeoPointField(required=True)
+    types = ListField()
+    g_id = StringField()
+    vicinity = StringField()
+
+    def __unicode__(self):
+        return "%s @ (%s, %s)" % (self.name, self.location[0], self.location[1])
 
 
 class Driver(Document):
@@ -49,18 +68,39 @@ class Ride(Document):
     `departure` to `destination`.
     '''
     driver = ReferenceField(Driver, required=True)
-    departure = StringField(required=True)
-    destination = StringField(required=True)
+    departure = ReferenceField(Location)
+    destination = ReferenceField(Location)
     depart_date = DateTimeField(required=True)
     people = IntField(required=True)
 
-    def set_lat_long(self):
-        place, (lat, lng) = geo.geocode(self.departure)
-        self.depart_loc = (lat, lng)
-        place, (lat, lng) = geo.geocode(self.destination)
-        self.destination_loc = (lat, lng)
+    def set_places(self, depart_name, destination_name):
+        print 'dept: %s, dest: %s' % (depart_name, destination_name)
+        geo = geocode.GoogleV3()
+
+        place, (lat, lng) = geo.geocode(depart_name)
+        matching_departure = Location.objects(location=(lat, lng))
+        if matching_departure.count() > 0:
+            self.departure = matching_departure.first()
+        else:
+            self.departure = Location()
+            self.departure.name = depart_name
+            self.departure.location = (lat, lng)
+            self.departure.save()
+        logger.debug("set dept: %s" % self.departure)
+
+        place, (lat, lng) = geo.geocode(destination_name)
+        matching_destination = Location.objects(location=(lat, lng))
+        if matching_destination.count() > 0:
+            self.destination = matching_destination.first()
+        else:
+            self.destination = Location()
+            self.destination.name = destination_name
+            self.destination.location = (lat, lng)
+            self.destination.save()
+        logger.debug("set dest: %s" % self.destination)
 
     def __unicode__(self):
         return "%s, %s->%s" % (self.driver, self.departure, self.destination)
+
 
 
