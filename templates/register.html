@@ -10,7 +10,7 @@
 
 <div id=register>
   <div class=facebook>
-    <a class=button href="https://www.facebook.com/dialog/oauth?client_id=323047141166519&redirect_uri=http://localhost:5000{{ url_for('register.facebook_register') }}">Register with Facebook</a>
+    <a class=button href="{{ facebook_auth_url }}">Register with Facebook</a>
   </div>
 
   <div class=manual>

@@ -17,6 +17,11 @@ def login_finally(next_url):
     return '404'
 
 
+def get_facebook_auth_url(client_id, redirect_uri):
+    s = "https://www.facebook.com/dialog/oauth?client_id={client_id}&redirect_uri={redirect_uri}"
+    return s.format(client_id = client_id, redirect_uri = redirect_uri)
+
+
 @login.route('', methods=['GET', 'POST'])
 def login_user():
     # this is the URL for redirect to self if login failure
@@ -50,7 +55,10 @@ def login_user():
         app.logger.debug(request.args)
         # put the redirect URL in session. so we can use FB login
         session['after_login_post'] = request.args.get('next')
-        return render_template('login.html')
+        client_id = CONFIG.app_id
+        redirect_uri = CONFIG.url + url_for('.facebook_login')
+        auth_url = get_facebook_auth_url(client_id, redirect_uri)
+        return render_template('login.html', facebook_login_link = auth_url)
 
 
 @login.route('/facebook')

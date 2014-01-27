@@ -7,7 +7,7 @@ from schema import *
 from utils import *
 from config import exported as CONFIG
 from constants import *
-from login import facebook_auth
+from login import facebook_auth, get_facebook_auth_url
 
 register = Blueprint('register', __name__, url_prefix = '/register')
 
@@ -45,7 +45,10 @@ def register_user():
         flash((CSS_SUCC, "Register successful!"))
         return redirect(url_for('login.login_user'))
     else: # request.method == 'GET'
-        return render_template('register.html')
+        client_id = CONFIG.app_id
+        redirect_uri = CONFIG.url + url_for('.facebook_register')
+        auth_url = get_facebook_auth_url(client_id, redirect_uri)
+        return render_template('register.html', facebook_auth_url = auth_url)
 
 
 @register.route('/facebook')
