@@ -150,7 +150,7 @@ def get_locations():
             'distance': distance((lat, lon), location.location)
         }
 
-    query = request.args.get('q')
+    query = request.args.get('q', '')
 
     locations = Location.objects(
         location__near = (lat, lon),
