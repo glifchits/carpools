@@ -49,8 +49,8 @@ def search_rides(departure, destination):
     srt = "+depart_date"
     matches = Ride.objects(
         depart_date__gte = datetime.now(),
-        destination__in = Location.objects(name__icontains = destination),
-        departure__in   = Location.objects(name__icontains = departure)
+        destination__in = Location.objects(name__istartswith = destination),
+        departure__in   = Location.objects(name__istartswith = departure)
     ).order_by(srt)
 
     arriving, departing = [], []
