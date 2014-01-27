@@ -159,7 +159,6 @@ def get_locations():
     app.logger.debug(locations)
 
     results = [datum(loc) for loc in locations]
-    app.logger.debug(results)
     return json.dumps(results, indent=4)
 
 

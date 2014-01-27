@@ -76,9 +76,7 @@ class Geocoder(object):
 
 
 def save_locations(lat, lon):
-    app.logger.debug('getting locations at (%s, %s)' % (lat, lon))
     results = Geocoder().nearby_search(lat, lon)['results']
-    app.logger.debug('results from geocoder: %s' % results)
     for result in results:
         loclat = float(result['geometry']['location']['lat'])
         loclon = float(result['geometry']['location']['lng'])
