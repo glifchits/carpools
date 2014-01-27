@@ -152,7 +152,10 @@ def get_locations():
 
     query = request.args.get('q')
 
-    locations = Location.objects(location__near = (lat, lon)).no_cache()
+    locations = Location.objects(
+        location__near = (lat, lon),
+        name__istartswith = query
+    )
     app.logger.debug(locations)
 
     results = [datum(loc) for loc in locations]
