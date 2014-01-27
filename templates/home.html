@@ -28,8 +28,8 @@
 <script>
 $('input[name=departure]').typeahead([{
   name: 'departures',
-  prefetch: 'http://localhost:5000/locations',
-  remote: 'http://localhost:5000/locations?q=%QUERY'
+  prefetch: '/locations',
+  remote: '/locations?q=%QUERY'
 }]);
 
 $('input[name=destination]').typeahead([{
