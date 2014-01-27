@@ -5,7 +5,7 @@ import mongoengine.errors
 
 from schema import *
 from utils import *
-from config import CONFIG
+from config import exported as CONFIG
 from constants import *
 from login import facebook_auth
 
@@ -53,7 +53,7 @@ def facebook_register():
     '''Facebook register: authentication and profile creation'''
     code = request.values['code']
 
-    redirecturi = CONFIG['url'] + url_for('.facebook_register')
+    redirecturi = CONFIG.url + url_for('.facebook_register')
     values = facebook_auth(code, redirecturi)
 
     req = graph('me', values[ 'access_token' ])

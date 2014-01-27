@@ -35,7 +35,7 @@ from app.email import email
 app.register_blueprint(email)
 '''
 
-from app.config import CONFIG
+from app.config import exported as CONFIG
 ''' Mail setup '''
 from app.schema import Ride, Location
 from app import geocode
@@ -43,9 +43,9 @@ app.config.update({
     'MAIL_SERVER': 'smtp.gmail.com',
     'MAIL_PORT': 465,
     'MAIL_USE_SSL': True,
-    'MAIL_USERNAME': CONFIG['email-login'],
-    'MAIL_PASSWORD': CONFIG['email-pass'],
-    'DEFAULT_MAIL_SENDER': CONFIG['email-login']
+    'MAIL_USERNAME': CONFIG.email_login,
+    'MAIL_PASSWORD': CONFIG.email_pass,
+    'DEFAULT_MAIL_SENDER': CONFIG.email_login
 })
 mail = Mail(app)
 

@@ -3,7 +3,7 @@ from flask import render_template, request, url_for, redirect, flash, session
 from flask import Blueprint, current_app as app
 from schema import *
 from utils import *
-from config import CONFIG
+from config import exported as CONFIG
 from constants import *
 
 login = Blueprint('login', __name__, url_prefix = '/login')
@@ -58,7 +58,7 @@ def facebook_login():
     '''Facebook login flow'''
     # this redirect URI is called and the request contains a `code`
     code = request.values['code']
-    redirecturi = CONFIG['url'] + url_for('.facebook_login')
+    redirecturi = CONFIG.url + url_for('.facebook_login')
 
     # `values` are what we need
     values = facebook_auth(code, redirecturi)
@@ -95,8 +95,8 @@ def facebook_auth(code, redirect_uri):
         j[u'status'] = request.status_code
         return j
 
-    app_id = CONFIG['app-id']
-    app_secret = CONFIG['app-secret']
+    app_id = CONFIG.app_id
+    app_secret = CONFIG.app_secret
 
     # `code` is used to retrieve an access token
     url = "https://graph.facebook.com/oauth/access_token?"
