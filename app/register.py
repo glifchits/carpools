@@ -57,28 +57,30 @@ def facebook_register():
     code = request.values['code']
 
     redirecturi = CONFIG.url + url_for('.facebook_register')
-    values = facebook_auth(code, redirecturi)
 
-    req = graph('me', values[ 'access_token' ])
-    app.logger.debug(req)
+    # get the facebook login info. profile created and saved to DB
+    auth_request = facebook_auth(code, redirecturi)
 
+    # get the facebook user info by making a graph API request
+    user_info = graph('me', auth_request[ 'access_token' ])
+
+    # create the persistent Driver object
     driver = Driver()
-    driver.email = req['email']
-    driver.name = req['name']
-    driver.facebook = values['fb_object_id']
+    driver.email = user_info['email']
+    driver.name = user_info['name']
 
-    fb = Facebook.objects(id = values['fb_object_id'])
-    if fb.count() != 1:
-        pass
-    else:
-        fb = fb[0]
-        user_id = req['id']
-        fb.username = req.get('username','')
-        fb.link = req.get('link', '')
+    # recall that 'fb_object_id' key was added in the `facebook_auth` function
+    # will get the Facebook object if the profile was successfully created
+    fb = Facebook.objects(id = auth_request['fb_object_id']).first()
+    if fb:
+        # we just update their user info
+        fb.username = user_info.get('username','')
+        fb.link = user_info.get('link', '')
 
         img_url = 'http://graph.facebook.com/%s/picture?width=300&height=300'
-        image_request = requests.get(img_url % user_id, stream=True)
+        image_request = requests.get(img_url % user_info['id'], stream=True)
         if image_request.status_code == 200:
+            # here we just save the user's current profile image to the database
             image_path = 'static/temp/profile_temp.jpg'
             image = open(image_path, 'wb')
             for chunk in image_request.iter_content():
@@ -89,17 +91,17 @@ def facebook_register():
             image.close()
         else:
             app.logger.error("image request failed %s" % image_request.status_code)
-    try:
-        driver.save()
-        fb.save()
-    except:
+    else:
+        app.logger.error("no facebook object found!")
         raise
+
+    driver.facebook = fb
 
     try:
         driver.save()
-    except Exception as e:
-        flash((CSS_ERR, """That Facebook account is already linked to a user on
-this site!"""))
+        fb.save()
+    except mongoengine.errors.NotUniqueError:
+        flash((CSS_ERR, "Your email is already registered on this site!"))
         return redirect(url_for('login.login_user'))
 
     session['user'] = jsonify(driver)
