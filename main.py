@@ -156,9 +156,9 @@ def get_locations():
         location__near = (lat, lon),
         name__istartswith = query
     )
-    app.logger.debug(locations)
+    app.logger.debug("locations are %s" % locations)
 
-    results = [datum(loc) for loc in locations]
+    results = map(datum, locations)
     return json.dumps(results, indent=4)
 
 
