@@ -6,7 +6,6 @@ This contains the schemas for `carpools`
 from mongoengine import *
 from werkzeug.security import generate_password_hash, check_password_hash
 import time
-import geocode
 
 try:
     from flask import current_app as app

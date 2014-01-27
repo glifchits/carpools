@@ -1,7 +1,6 @@
 
 from flask import current_app as app
 from config import GCONFIG as CONFIG
-from schema import *
 from geopy.geocoders import GoogleV3
 import requests
 import urllib
@@ -93,9 +92,4 @@ def save_locations(lat, lon):
             app.logger.debug('saved %s' % place)
         except Exception as e:
             pass#app.logger.debug("didn't save %s: %s" % (place, e))
-
-def get_locations(lat, lon, query=''):
-    resultset = Location.objects(location__near=[lat, lon]).no_cache()
-    return resultset
-
 

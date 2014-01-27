@@ -37,7 +37,7 @@ app.register_blueprint(email)
 
 from app.config import CONFIG
 ''' Mail setup '''
-from app.schema import Ride
+from app.schema import Ride, Location
 from app import geocode
 app.config.update({
     'MAIL_SERVER': 'smtp.gmail.com',
@@ -126,9 +126,17 @@ def send_email(ride_id):
     return 'success'
 
 
+import math
+def distance(p1, p2):
+    x1, y1 = map(float, p1)
+    x2, y2 = map(float, p2)
+    return math.sqrt( (x2 - x1) ** 2 + (y2 - y1) ** 2 )
+
+
 @app.route('/locations')
 def get_locations():
     if 'location' not in session:
+        # test location.
         lat = 43.48
         lon = -80.5
     else:
@@ -138,18 +146,18 @@ def get_locations():
         return {
             'value': location.name,
             'name': location.name,
-            'tokens' : location.name.split(' ')
+            'tokens' : location.name.split(' '),
+            'distance': distance((lat, lon), location.location)
         }
 
     query = request.args.get('q')
 
-    locations = geocode.get_locations(lat, lon, query)
+    locations = Location.objects(location__near = (lat, lon)).no_cache()
     app.logger.debug(locations)
 
     results = [datum(loc) for loc in locations]
-    results.reverse()
     app.logger.debug(results)
-    return json.dumps(results)
+    return json.dumps(results, indent=4)
 
 
 if __name__ == '__main__':
