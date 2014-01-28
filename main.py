@@ -68,11 +68,11 @@ print "start mongodb setup"
 ''' MongoDB setup '''
 from mongoengine import *
 app.config['MONGODB_SETTINGS'] = {
-    'DB': 'app19550831',
-    'USERNAME': 'heroku',
-    'PASSWORD': 'cf68822c49b79afb7d70fa17002264fd',
-    'HOST': 'paulo.mongohq.com',
-    'PORT': 10068
+    'DB': CONFIG.db_db,
+    'USERNAME': CONFIG.db_user,
+    'PASSWORD': CONFIG.db_password,
+    'HOST': CONFIG.db_url,
+    'PORT': int(CONFIG.db_port)
 }
 db = MongoEngine(app)
 
