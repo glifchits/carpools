@@ -1,6 +1,7 @@
 Flask==0.10.1
 Flask-Assets==0.8
 Flask-WTF==0.9.3
+Flask-Mail==0.9.0
 Jinja2==2.7.1
 MarkupSafe==0.18
 WTForms==1.0.5
