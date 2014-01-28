@@ -1,0 +1,16 @@
+div.facebook a.button {
+  background-color: #3498db;
+  border: 3px solid #2980b9;
+  color: white; }
+  div.facebook a.button:hover, div.facebook a.button:focus {
+    background-color: #2980b9; }
+
+#register div.facebook, #register div.manual {
+  text-align: center; }
+
+button {
+  background-color: #1abc9c;
+  border: 3px solid #16a085;
+  color: white; }
+  button:hover, button:focus {
+    background-color: #16a085; }

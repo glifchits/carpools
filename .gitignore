@@ -1,8 +1,6 @@
 prod/
 **/*.zip
 *.pyc
-static/css/*
-app/config.py
 *cache
 /env
 static/hosted/*
