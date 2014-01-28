@@ -9,7 +9,9 @@ import sys
 from mongoengine import *
 from app.schema import *
 
-connect('carpools')
+from app.config import exported as CONFIG
+
+connect(CONFIG.db_db, host = CONFIG.db_uri)
 
 
 CITIES = set([
