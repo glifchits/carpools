@@ -64,7 +64,13 @@ if not os.path.exists('static/temp'):
 
 ''' MongoDB setup '''
 from mongoengine import *
-app.config['MONGODB_SETTINGS'] = {'DB': 'carpools'}
+app.config['MONGODB_SETTINGS'] = {
+    'DB': CONFIG.db_db,
+    'USERNAME': CONFIG.db_user,
+    'PASSWORD': CONFIG.db_password,
+    'HOST': CONFIG.db_url,
+    'PORT': int(CONFIG.db_port)
+}
 db = MongoEngine(app)
 
 ''' Asset bundles '''
