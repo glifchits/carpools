@@ -1,6 +1,7 @@
 prod/
 **/*.zip
 **/config.py
+static/css
 *.pyc
 *cache
 /env
