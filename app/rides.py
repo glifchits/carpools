@@ -63,7 +63,7 @@ def create():
         return redirect(url_for('rides.create'))
 
     ride = Ride()
-    ride.driver = session['user']['id']
+    ride.driver = Driver.objects(id = str(session['user']['id'])).first()
     ride.people = people
     ride.depart_date = depart_date
     ride.set_places(departure, destination)
