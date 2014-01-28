@@ -13,13 +13,9 @@ import json
 
 from app.constants import *
 
-print "Starting Flask setup"
-
 ''' Flask app setup '''
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-
-print "adding blueprints"
 
 ''' blueprints '''
 from app.search import search
@@ -56,14 +52,10 @@ mail = Mail(app)
 if DEBUG:
     app.debug = True
 
-print "mkdirs"
-
 if not os.path.exists('static/hosted'):
     os.mkdir('static/hosted')
 if not os.path.exists('static/temp'):
     os.mkdir('static/temp')
-
-print "start mongodb setup"
 
 ''' MongoDB setup '''
 from mongoengine import *
@@ -76,8 +68,6 @@ app.config['MONGODB_SETTINGS'] = {
 }
 db = MongoEngine(app)
 
-print "and the rest"
-
 ''' Other extensions '''
 # jinja template loop controls. allows {% continue %}
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -88,23 +78,18 @@ def format_datetime(value, format='%I:%M %p on %a, %b %d'):
 
 app.jinja_env.filters['datetime'] = format_datetime
 
-print 'done with preamble'
-
 ''' App controllers '''
 
-print 'routing home'
 @app.route('/')
 def home():
     session.debug = DEBUG
     return render_template('home.html')
 
-print 'routing logout'
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
-print 'routing submit location'
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
     lat = request.values.get('lat')
@@ -170,8 +155,6 @@ def get_locations():
     return json.dumps(results, indent=4)
 
 
-print 'starting run'
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    print "running app"
     app.run(port = port, use_reloader = False)
