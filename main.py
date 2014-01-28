@@ -1,4 +1,4 @@
-DEBUG = True
+DEBUG = False
 
 ''' Flask+extension imports '''
 from flask import Flask
@@ -13,9 +13,13 @@ import json
 
 from app.constants import *
 
+print "Starting Flask setup"
+
 ''' Flask app setup '''
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+
+print "adding blueprints"
 
 ''' blueprints '''
 from app.search import search
@@ -49,28 +53,30 @@ app.config.update({
 })
 mail = Mail(app)
 
-assets = Environment(app)
-assets.init_app(app)
-
 if DEBUG:
     app.debug = True
-    assets.debug = True
+
+print "mkdirs"
 
 if not os.path.exists('static/hosted'):
     os.mkdir('static/hosted')
 if not os.path.exists('static/temp'):
     os.mkdir('static/temp')
 
+print "start mongodb setup"
 
 ''' MongoDB setup '''
 from mongoengine import *
-app.config['MONGODB_SETTINGS'] = {'DB': 'carpools'}
+app.config['MONGODB_SETTINGS'] = {
+    'DB': 'app19550831',
+    'USERNAME': 'heroku',
+    'PASSWORD': 'cf68822c49b79afb7d70fa17002264fd',
+    'HOST': 'paulo.mongohq.com',
+    'PORT': 10068
+}
 db = MongoEngine(app)
 
-''' Asset bundles '''
-css = Bundle('css/style.css', 'css/home.css', 'css/show_results.css', \
-    'css/show_ride.css', 'css/normalize.css')
-assets.register('css', css)
+print "and the rest"
 
 ''' Other extensions '''
 # jinja template loop controls. allows {% continue %}
@@ -82,20 +88,23 @@ def format_datetime(value, format='%I:%M %p on %a, %b %d'):
 
 app.jinja_env.filters['datetime'] = format_datetime
 
+print 'done with preamble'
+
 ''' App controllers '''
 
+print 'routing home'
 @app.route('/')
 def home():
     session.debug = DEBUG
     return render_template('home.html')
 
-
+print 'routing logout'
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('home'))
 
-
+print 'routing submit location'
 @app.route('/submit_location', methods=['POST'])
 def get_browser_location():
     lat = request.values.get('lat')
@@ -104,7 +113,6 @@ def get_browser_location():
     app.logger.debug("client's location is (%s, %s)" % (lat, lng))
     geocode.save_locations(lat, lng)
     return "success"
-
 
 @app.route('/email/<ride_id>', methods=['POST'])
 def send_email(ride_id):
@@ -162,10 +170,8 @@ def get_locations():
     return json.dumps(results, indent=4)
 
 
+print 'starting run'
 if __name__ == '__main__':
-    import sys
-    try:
-        port = int(sys.argv[1])
-    except:
-        port = 5000
-    app.run(port = port)
+    port = int(os.environ.get('PORT', 5000))
+    print "running app"
+    app.run(port = port, use_reloader = False)
