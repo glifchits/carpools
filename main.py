@@ -2,7 +2,8 @@ DEBUG = True
 
 ''' Flask+extension imports '''
 from flask import Flask
-from flask import render_template, request, url_for, redirect, flash, session
+from flask import render_template, request, url_for, redirect, flash, session,\
+    g
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.assets import Environment, Bundle
 from flask.ext.mail import Mail, Message
@@ -10,6 +11,7 @@ from flask.ext.mail import Mail, Message
 ''' other libraries '''
 import os
 import json
+from datetime import datetime
 
 from app.constants import *
 
@@ -89,6 +91,11 @@ def format_datetime(value, format='%I:%M %p on %a, %b %d'):
 app.jinja_env.filters['datetime'] = format_datetime
 
 ''' App controllers '''
+
+@app.before_first_request
+def before_first_request():
+    g.year = datetime.now().year
+
 
 @app.route('/')
 def home():
